@@ -9,10 +9,6 @@ import com.framgia.beemusic.data.source.SongAlbumRepository;
 import com.framgia.beemusic.data.source.SongRepository;
 import com.framgia.beemusic.data.source.SongSingerRepository;
 
-import rx.Subscriber;
-import rx.Subscription;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -53,24 +49,5 @@ public class MainPresenter implements MainContract.Presenter {
 
     @Override
     public void subcribe() {
-        mSubscriptions.clear();
-        Subscription subscription = mSongRepository.getDataObservable(mSongRepository
-            .getCursorFromMediaStore())
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(new Subscriber<Cursor>() {
-                @Override
-                public void onCompleted() {
-                }
-
-                @Override
-                public void onError(Throwable e) {
-                }
-
-                @Override
-                public void onNext(Cursor cursor) {
-                    synchronizeData(cursor);
-                }
-            });
     }
 }

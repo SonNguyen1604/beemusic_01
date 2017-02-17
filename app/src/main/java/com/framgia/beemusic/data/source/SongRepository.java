@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.provider.MediaStore;
 
 import com.framgia.beemusic.data.model.Song;
-import com.framgia.beemusic.data.source.local.song.SongLocalHander;
+import com.framgia.beemusic.data.source.local.song.SongLocalDataSource;
 
 import java.util.List;
 
@@ -27,14 +27,14 @@ public class SongRepository implements DataSource<Song> {
 
     public static SongRepository getInstant(Context context) {
         if (mSongRepository == null) {
-            mSongRepository = new SongRepository(SongLocalHander.getInstant(context), context);
+            mSongRepository = new SongRepository(SongLocalDataSource.getInstant(context), context);
         }
         return mSongRepository;
     }
 
     @Override
-    public List<Song> getModel(String selection, String[] Args) {
-        return mLocalHandler.getModel(selection, Args);
+    public List<Song> getModel(String selection, String[] args) {
+        return mLocalHandler.getModel(selection, args);
     }
 
     @Override
@@ -58,18 +58,13 @@ public class SongRepository implements DataSource<Song> {
     }
 
     @Override
-    public void implementCallback(Callback<Song> callback, List<Song> models) {
-        mLocalHandler.implementCallback(callback, models);
-    }
-
-    @Override
     public Song getDataFromMediaStore(Cursor cursor) {
         return mLocalHandler.getDataFromMediaStore(cursor);
     }
 
     @Override
-    public Observable<Cursor> getDataObservable(Cursor mediaCursor) {
-        return mLocalHandler.getDataObservable(mediaCursor);
+    public Observable<Song> getDataObservable(List<Song> models) {
+        return mLocalHandler.getDataObservable(models);
     }
 
     public Cursor getCursorFromMediaStore() {
