@@ -3,7 +3,6 @@ package com.framgia.beemusic.data.source;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 
 import com.framgia.beemusic.data.source.local.DataHelper;
 import com.framgia.beemusic.data.source.local.album.AlbumSourceContract;
@@ -28,55 +27,72 @@ public class SongAlbumRepository extends DataHelper implements DataSourceRelatio
     }
 
     @Override
-    public Cursor getModel(String selection, String[] Args) {
-        SQLiteDatabase db = getReadableDatabase();
-        String sortOrder = SongSourceContract.SongEntry.COLUMN_ID_SONG + " ASC";
-        return db.query(SongAlbumSourceContract.SongAlbumEntry.TABLE_TEMP_SONG_ALBUM_NAME, null,
-            selection, Args,
-            null, null, sortOrder);
+    public Cursor getModel(String selection, String[] args) {
+        Cursor cursor = null;
+        try {
+            openDatabase();
+            String sortOrder = SongSourceContract.SongEntry.COLUMN_ID_SONG + " ASC";
+            cursor = mDatabase.query(SongAlbumSourceContract.SongAlbumEntry
+                    .TABLE_SONG_ALBUM_RELATIONSHIP_NAME, null,
+                selection, args,
+                null, null, sortOrder);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabse();
+        }
+        return cursor;
     }
 
-    /**
-     * @param id1: id of song
-     * @param id2: id of album
-     * @return number of row inserted
-     */
     @Override
-    public int save(int id1, int id2) {
+    public int save(int idSong, int idAlbum) {
         int count = -1;
-        SQLiteDatabase db = getWritableDatabase();
-        ContentValues contentValues = createContentValue(id1, id2);
-        if (contentValues == null) return -1;
-        count = (int) db
-            .insert(SongAlbumSourceContract.SongAlbumEntry.TABLE_TEMP_SONG_ALBUM_NAME, null,
-                contentValues);
-        db.close();
+        try {
+            openDatabase();
+            ContentValues contentValues = createContentValue(idSong, idAlbum);
+            if (contentValues == null) return -1;
+            count = (int) mDatabase
+                .insert(SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME, null,
+                    contentValues);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabse();
+        }
         return count;
     }
 
-    /**
-     * @param id1: id of song
-     * @param id2: id of album
-     * @return number of row deleted
-     */
     @Override
-    public int delete(int id1, int id2) {
+    public int delete(int idSong, int idAlbum) {
         int count = -1;
-        String selection = SongSourceContract.SongEntry.COLUMN_ID_SONG
-            + " = ? " + " and "
-            + AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
-        SQLiteDatabase db = getWritableDatabase();
-        count = db.delete(SongAlbumSourceContract.SongAlbumEntry.TABLE_TEMP_SONG_ALBUM_NAME,
-            selection, new String[]{String.valueOf(id1), String.valueOf(id2)});
-        db.close();
+        try {
+            String selection = SongSourceContract.SongEntry.COLUMN_ID_SONG
+                + " = ? " + " and "
+                + AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
+            openDatabase();
+            count =
+                mDatabase.delete(SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME,
+                    selection, new String[]{String.valueOf(idSong), String.valueOf(idAlbum)});
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabse();
+        }
         return count;
     }
 
     @Override
     public void deleteAlls() {
-        SQLiteDatabase db = getWritableDatabase();
-        db.delete(SongAlbumSourceContract.SongAlbumEntry.TABLE_TEMP_SONG_ALBUM_NAME, null, null);
-        db.close();
+        try {
+            openDatabase();
+            mDatabase
+                .delete(SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME, null,
+                    null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            closeDatabse();
+        }
     }
 
     private ContentValues createContentValue(int idSong, int idAlbum) {

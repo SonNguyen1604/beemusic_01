@@ -4,7 +4,7 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.framgia.beemusic.data.model.Singer;
-import com.framgia.beemusic.data.source.local.singer.SingerLocalHandler;
+import com.framgia.beemusic.data.source.local.singer.SingerLocalDataSource;
 import com.framgia.beemusic.data.source.local.singer.SingerSourceContract;
 
 import java.util.List;
@@ -24,14 +24,14 @@ public class SingerRepository implements DataSource<Singer> {
 
     public static SingerRepository getInstant(Context context) {
         if (sSingerRepository == null) {
-            sSingerRepository = new SingerRepository(SingerLocalHandler.getInstant(context));
+            sSingerRepository = new SingerRepository(SingerLocalDataSource.getInstant(context));
         }
         return sSingerRepository;
     }
 
     @Override
-    public List<Singer> getModel(String selection, String[] Args) {
-        return mLocalHandler.getModel(selection, Args);
+    public List<Singer> getModel(String selection, String[] args) {
+        return mLocalHandler.getModel(selection, args);
     }
 
     @Override
@@ -60,18 +60,13 @@ public class SingerRepository implements DataSource<Singer> {
     }
 
     @Override
-    public void implementCallback(Callback<Singer> callback, List<Singer> models) {
-        mLocalHandler.implementCallback(callback, models);
-    }
-
-    @Override
     public Singer getDataFromMediaStore(Cursor cursor) {
         return mLocalHandler.getDataFromMediaStore(cursor);
     }
 
     @Override
-    public Observable<Cursor> getDataObservable(Cursor mediaCursor) {
-        return mLocalHandler.getDataObservable(mediaCursor);
+    public Observable<Singer> getDataObservable(List<Singer> models) {
+        return mLocalHandler.getDataObservable(models);
     }
 
     /**
