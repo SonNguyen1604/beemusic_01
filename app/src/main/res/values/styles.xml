@@ -6,4 +6,14 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
     </style>
+
+    <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_less_green</item>
+        <item name="colorPrimaryDark">@color/color_less_green</item>
+    </style>
+
+    <style name="ActionBarToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="colorControlNormal">@color/color_white</item>
+        <item name="android:colorControlNormal">@color/color_white</item>
+    </style>
 </resources>

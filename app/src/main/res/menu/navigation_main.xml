@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:title="@string/title_local_music">
+        <menu>
+            <item
+                android:id="@+id/item_song"
+                android:icon="@drawable/ic_song"
+                android:title="@string/title_song"/>
+            <item
+                android:id="@+id/item_album"
+                android:icon="@drawable/ic_music_album"
+                android:title="@string/title_album"/>
+            <item
+                android:id="@+id/item_singer"
+                android:icon="@drawable/ic_singer"
+                android:title="@string/title_singer"/>
+            <item
+                android:id="@+id/item_favorite"
+                android:icon="@drawable/ic_is_favorite"
+                android:title="@string/title_favorite"/>
+        </menu>
+    </item>
+    <item
+        android:icon="@drawable/ic_feedback"
+        android:title="@string/title_feedback"
+        android:id="@+id/item_feadback"/>
+</menu>

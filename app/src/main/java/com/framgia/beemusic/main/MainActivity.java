@@ -1,15 +1,17 @@
 package com.framgia.beemusic.main;
 
 import android.Manifest;
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Window;
 import android.widget.Toast;
 
 import com.framgia.beemusic.R;
@@ -17,6 +19,7 @@ import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
 import com.framgia.beemusic.data.source.SongRepository;
 import com.framgia.beemusic.data.source.SynchronizeRepository;
+import com.framgia.beemusic.databinding.ActivityMainBinding;
 import com.framgia.beemusic.service.ObservableService;
 
 import rx.subscriptions.CompositeSubscription;
@@ -24,11 +27,14 @@ import rx.subscriptions.CompositeSubscription;
 public class MainActivity extends AppCompatActivity implements MainContract.View {
     private MainContract.Presenter mPresenter;
     private static final int READ_EXTERNAL_STORAGE_CODE = 1;
+    private ActivityMainBinding mBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
+        mBinding.setMainActivity(this);
         initPresenter();
         checkAndRequestPermission();
         runningObserverService();
