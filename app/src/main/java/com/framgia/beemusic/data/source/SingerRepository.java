@@ -1,7 +1,6 @@
 package com.framgia.beemusic.data.source;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.framgia.beemusic.data.model.Singer;
 import com.framgia.beemusic.data.source.local.singer.SingerLocalDataSource;
@@ -36,11 +35,7 @@ public class SingerRepository implements DataSource<Singer> {
 
     @Override
     public int save(Singer model) {
-        int idSinger = checkExistSinger(model.getName());
-        if (idSinger != -1) {
-            model.setId(idSinger);
-            update(model);
-        }
+        if (checkExistModel(model.getId())) return update(model);
         return mLocalHandler.save(model);
     }
 
@@ -60,26 +55,13 @@ public class SingerRepository implements DataSource<Singer> {
     }
 
     @Override
-    public Singer getDataFromMediaStore(Cursor cursor) {
-        return mLocalHandler.getDataFromMediaStore(cursor);
+    public boolean checkExistModel(int id) {
+        return mLocalHandler.checkExistModel(id);
     }
 
     @Override
     public Observable<Singer> getDataObservable(List<Singer> models) {
         return mLocalHandler.getDataObservable(models);
-    }
-
-    /**
-     * check exist of singer object in database
-     *
-     * @param name: singer 's name
-     * @return id of singer
-     */
-    private int checkExistSinger(String name) {
-        String selection = SingerSourceContract.SingerEntry.COLUMN_NAME + " = ?";
-        List<Singer> singers = getModel(selection, new String[]{name});
-        if (singers == null) return -1;
-        return singers.get(0).getId();
     }
 
     private int getCountSong(int id) {

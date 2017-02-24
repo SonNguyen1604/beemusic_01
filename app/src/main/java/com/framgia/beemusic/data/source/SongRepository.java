@@ -2,8 +2,6 @@ package com.framgia.beemusic.data.source;
 
 import android.content.ContentResolver;
 import android.content.Context;
-import android.database.Cursor;
-import android.provider.MediaStore;
 
 import com.framgia.beemusic.data.model.Song;
 import com.framgia.beemusic.data.source.local.song.SongLocalDataSource;
@@ -39,6 +37,7 @@ public class SongRepository implements DataSource<Song> {
 
     @Override
     public int save(Song song) {
+        if (checkExistModel(song.getId())) return update(song);
         return mLocalHandler.save(song);
     }
 
@@ -58,19 +57,12 @@ public class SongRepository implements DataSource<Song> {
     }
 
     @Override
-    public Song getDataFromMediaStore(Cursor cursor) {
-        return mLocalHandler.getDataFromMediaStore(cursor);
+    public boolean checkExistModel(int id) {
+        return mLocalHandler.checkExistModel(id);
     }
 
     @Override
     public Observable<Song> getDataObservable(List<Song> models) {
         return mLocalHandler.getDataObservable(models);
-    }
-
-    public Cursor getCursorFromMediaStore() {
-        String sortOrder = MediaStore.Audio.Media._ID;
-        Cursor cursor = mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null,
-            MediaStore.Audio.Media.IS_MUSIC + " = ?", new String[]{"1"}, sortOrder);
-        return cursor;
     }
 }

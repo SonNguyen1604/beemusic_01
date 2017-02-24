@@ -32,12 +32,13 @@ public class DataHelper extends SQLiteOpenHelper {
     private static final String INTERGER_TYPE = " INTEGER";
     private static final String COMMA_SEP = ",";
     private static final String PRIMARY_KEY = " PRIMARY KEY";
-    private static final String AUTO_CREMENT = " AUTOINCREMENT NOT NULL";
+    private static final String AUTO_CREMENT = " AUTOINCREMENT";
+    private static final String NOT_NULL = " NOT NULL";
     private static final String COMMA_CREATE_TABLE = "CREATE TABLE ";
     private static final String DROPTABLE_IF_EXIST = "DROP TABLE IF EXISTS ";
     private static final String COMMA_CREATE_SONG_TABLE =
         COMMA_CREATE_TABLE + TABLE_SONG_NAME + " ("
-            + COLUMN_ID_SONG + INTERGER_TYPE + PRIMARY_KEY + AUTO_CREMENT + COMMA_SEP
+            + COLUMN_ID_SONG + INTERGER_TYPE + PRIMARY_KEY + AUTO_CREMENT + NOT_NULL + COMMA_SEP
             + COLUMN_NAME + TEXT_TYPE + COMMA_SEP
             + COLUMN_LINK + TEXT_TYPE + COMMA_SEP
             + COLUMN_TYPE + INTERGER_TYPE + COMMA_SEP

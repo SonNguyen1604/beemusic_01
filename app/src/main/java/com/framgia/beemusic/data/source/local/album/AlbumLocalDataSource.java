@@ -3,7 +3,6 @@ package com.framgia.beemusic.data.source.local.album;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.MediaStore;
 
 import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.data.source.DataSource;
@@ -123,11 +122,11 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
     }
 
     @Override
-    public Album getDataFromMediaStore(Cursor cursor) {
-        if (cursor == null) return null;
-        String nameALbum = cursor.getString(cursor.getColumnIndexOrThrow(
-            MediaStore.Audio.Media.ALBUM));
-        return new Album(nameALbum, null, 0);
+    public boolean checkExistModel(int id) {
+        if (id == -1) return false;
+        String selection = AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
+        List<Album> albums = getModel(selection, new String[]{String.valueOf(id)});
+        return albums != null;
     }
 
     @Override
