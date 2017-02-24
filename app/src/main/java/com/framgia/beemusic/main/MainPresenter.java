@@ -1,14 +1,14 @@
 package com.framgia.beemusic.main;
 
-import android.content.Context;
 import android.database.Cursor;
 
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
-import com.framgia.beemusic.data.source.SongAlbumRepository;
 import com.framgia.beemusic.data.source.SongRepository;
-import com.framgia.beemusic.data.source.SongSingerRepository;
 
+import rx.Subscriber;
+import rx.Subscription;
+import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
 /**
@@ -18,36 +18,49 @@ public class MainPresenter implements MainContract.Presenter {
     private SongRepository mSongRepository;
     private SingerRepository mSingerRepository;
     private AlbumRepository mAlbumRepository;
-    private SongAlbumRepository mSongAlbumRepository;
-    private SongSingerRepository mSongSingerRepository;
+    private SynchronizeRepository mSynchronizeRepository;
     private MainContract.View mView;
-    private CompositeSubscription mSubscriptions;
+    private CompositeSubscription mSubscription;
 
-    public MainPresenter(Context context, MainContract.View view,
-                         CompositeSubscription subscription) {
-        mSingerRepository = SingerRepository.getInstant(context);
-        mSongRepository = SongRepository.getInstant(context);
-        mAlbumRepository = AlbumRepository.getInstant(context);
-        mSongAlbumRepository = SongAlbumRepository.getInstant(context);
-        mSongSingerRepository = SongSingerRepository.getInstant(context);
+    public MainPresenter(MainContract.View view, CompositeSubscription subscription,
+                         SongRepository songRepository, AlbumRepository albumRepository,
+                         SingerRepository singerRepository,
+                         SynchronizeRepository synchronizeRepository) {
         mView = view;
-        mSubscriptions = subscription;
-    }
-
-    /**
-     * synchonize data from media store and beemusic app
-     */
-    private void synchronizeData(Cursor cursor) {
-        int idSong, idSinger, idAlbum;
-        if (cursor == null) return;
-        idSong = mSongRepository.save(mSongRepository.getDataFromMediaStore(cursor));
-        idSinger = mSingerRepository.save(mSingerRepository.getDataFromMediaStore(cursor));
-        idAlbum = mAlbumRepository.save(mAlbumRepository.getDataFromMediaStore(cursor));
-        mSongAlbumRepository.save(idSong, idAlbum);
-        mSongSingerRepository.save(idSong, idSinger);
+        mSubscription = subscription;
+        mSongRepository = songRepository;
+        mAlbumRepository = albumRepository;
+        mSingerRepository = singerRepository;
+        mSynchronizeRepository = synchronizeRepository;
     }
 
     @Override
     public void subcribe() {
+        mSubscription.clear();
+        Subscription subscription = mSynchronizeRepository.getCursorObservable
+            (mSynchronizeRepository.getCursorFromMediastore())
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.newThread())
+            .subscribe(new Subscriber<Cursor>() {
+                @Override
+                public void onCompleted() {
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                }
+
+                @Override
+                public void onNext(Cursor cursor) {
+                    mSynchronizeRepository.synchronizeByAddModel(cursor);
+                }
+            });
+        mSubscription.add(subscription);
+    }
+
+    @Override
+    public void unsubcribe() {
+        mSubscription.clear();
     }
 }

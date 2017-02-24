@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BeeMusic</string>
+    <string name="title_permission">Permission necessary</string>
+    <string name="msg_external_storage_permision">
+        We need external permission to load allmusic
+    </string>
+    <string name="msg_not_load_mediastore">App not load music in media store</string>
 </resources>
