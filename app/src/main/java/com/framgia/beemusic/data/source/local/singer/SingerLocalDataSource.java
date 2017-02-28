@@ -3,7 +3,6 @@ package com.framgia.beemusic.data.source.local.singer;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.MediaStore;
 
 import com.framgia.beemusic.data.model.Singer;
 import com.framgia.beemusic.data.source.DataSource;
@@ -124,11 +123,11 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
     }
 
     @Override
-    public Singer getDataFromMediaStore(Cursor cursor) {
-        if (cursor == null) return null;
-        String nameSinger = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media
-            .ARTIST));
-        return new Singer(nameSinger, 0);
+    public boolean checkExistModel(int id) {
+        if (id == -1) return false;
+        String selection = SingerSourceContract.SingerEntry.COLUMN_ID_SINGER + " = ?";
+        List<Singer> singers = getModel(selection, new String[]{String.valueOf(id)});
+        return singers != null;
     }
 
     @Override

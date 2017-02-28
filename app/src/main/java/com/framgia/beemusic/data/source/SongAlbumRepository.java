@@ -52,7 +52,8 @@ public class SongAlbumRepository extends DataHelper implements DataSourceRelatio
             ContentValues contentValues = createContentValue(idSong, idAlbum);
             if (contentValues == null) return -1;
             count = (int) mDatabase
-                .insert(SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME, null,
+                .insert(SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME,
+                    null,
                     contentValues);
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,7 +72,8 @@ public class SongAlbumRepository extends DataHelper implements DataSourceRelatio
                 + AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
             openDatabase();
             count =
-                mDatabase.delete(SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME,
+                mDatabase.delete(
+                    SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME,
                     selection, new String[]{String.valueOf(idSong), String.valueOf(idAlbum)});
         } catch (Exception e) {
             e.printStackTrace();
@@ -86,7 +88,8 @@ public class SongAlbumRepository extends DataHelper implements DataSourceRelatio
         try {
             openDatabase();
             mDatabase
-                .delete(SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME, null,
+                .delete(SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME,
+                    null,
                     null);
         } catch (Exception e) {
             e.printStackTrace();

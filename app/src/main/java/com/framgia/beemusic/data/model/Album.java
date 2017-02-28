@@ -19,6 +19,13 @@ public class Album {
         mCount = count;
     }
 
+    public Album(int id, String name, String imageLink, int count) {
+        mId = id;
+        mName = name;
+        mImageLink = imageLink;
+        mCount = count;
+    }
+
     public Album(Cursor cursor) {
         mId = cursor.getInt(cursor.getColumnIndex(AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM));
         mName = cursor.getString(cursor.getColumnIndex(AlbumSourceContract.AlbumEntry.COLUMN_NAME));

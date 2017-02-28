@@ -26,6 +26,12 @@ public class Singer {
         mCount = count;
     }
 
+    public Singer(int id, String name, int count) {
+        mId = id;
+        mName = name;
+        mCount = count;
+    }
+
     public int getId() {
         return mId;
     }

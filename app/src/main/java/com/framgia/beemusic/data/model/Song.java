@@ -42,6 +42,17 @@ public class Song {
         mDuration = duration;
     }
 
+    public Song(int id, String name, String link, boolean isFavorite, int type, String genre,
+                int duration) {
+        mId = id;
+        mName = name;
+        mLink = link;
+        mIsFavorite = isFavorite;
+        mType = type;
+        mGenre = genre;
+        mDuration = duration;
+    }
+
     public int getId() {
         return mId;
     }

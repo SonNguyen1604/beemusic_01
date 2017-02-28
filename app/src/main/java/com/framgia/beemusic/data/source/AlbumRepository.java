@@ -1,7 +1,6 @@
 package com.framgia.beemusic.data.source;
 
 import android.content.Context;
-import android.database.Cursor;
 
 import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.data.source.local.album.AlbumLocalDataSource;
@@ -36,11 +35,7 @@ public class AlbumRepository implements DataSource<Album> {
 
     @Override
     public int save(Album model) {
-        int idAlbum = checkExistAlbum(model.getName());
-        if (idAlbum != -1) {
-            model.setId(idAlbum);
-            update(model);
-        }
+        if (checkExistModel(model.getId())) return update(model);
         return mLocalHandler.save(model);
     }
 
@@ -60,26 +55,13 @@ public class AlbumRepository implements DataSource<Album> {
     }
 
     @Override
-    public Album getDataFromMediaStore(Cursor cursor) {
-        return mLocalHandler.getDataFromMediaStore(cursor);
+    public boolean checkExistModel(int id) {
+        return mLocalHandler.checkExistModel(id);
     }
 
     @Override
     public Observable<Album> getDataObservable(List<Album> models) {
         return mLocalHandler.getDataObservable(models);
-    }
-
-    /**
-     * check exist of album
-     *
-     * @param name: album 's name
-     * @return id of album
-     */
-    private int checkExistAlbum(String name) {
-        String selection = AlbumSourceContract.AlbumEntry.COLUMN_NAME + " = ?";
-        List<Album> albums = getModel(selection, new String[]{name});
-        if (albums == null) return -1;
-        return albums.get(0).getId();
     }
 
     private int getCountSong(int id) {
