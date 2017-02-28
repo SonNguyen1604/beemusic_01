@@ -1,5 +1,7 @@
 package com.framgia.beemusic.main;
 
+import com.framgia.beemusic.BasePresenter;
+
 /**
  * Created by beepi on 20/02/2017.
  */

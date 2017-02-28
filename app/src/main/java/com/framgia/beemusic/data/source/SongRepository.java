@@ -2,6 +2,7 @@ package com.framgia.beemusic.data.source;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 
 import com.framgia.beemusic.data.model.Song;
 import com.framgia.beemusic.data.source.local.song.SongLocalDataSource;
@@ -64,5 +65,10 @@ public class SongRepository implements DataSource<Song> {
     @Override
     public Observable<Song> getDataObservable(List<Song> models) {
         return mLocalHandler.getDataObservable(models);
+    }
+
+    @Override
+    public Cursor getCursor(String selection, String[] args) {
+        return mLocalHandler.getCursor(selection, args);
     }
 }

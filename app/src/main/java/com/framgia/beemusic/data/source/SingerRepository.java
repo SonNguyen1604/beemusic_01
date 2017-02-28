@@ -1,6 +1,7 @@
 package com.framgia.beemusic.data.source;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import com.framgia.beemusic.data.model.Singer;
 import com.framgia.beemusic.data.source.local.singer.SingerLocalDataSource;
@@ -64,7 +65,12 @@ public class SingerRepository implements DataSource<Singer> {
         return mLocalHandler.getDataObservable(models);
     }
 
-    private int getCountSong(int id) {
+    @Override
+    public Cursor getCursor(String selection, String[] args) {
+        return mLocalHandler.getCursor(selection, args);
+    }
+
+    public int getCountSong(int id) {
         String selection = SingerSourceContract.SingerEntry.COLUMN_ID_SINGER + " = ?";
         List<Singer> singers = getModel(selection, new String[]{String.valueOf(id)});
         if (singers == null) return -1;

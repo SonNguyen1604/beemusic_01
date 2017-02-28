@@ -11,7 +11,6 @@ public final class SongSourceContract {
 
     public static class SongEntry extends BaseColumn {
         public static final String TABLE_SONG_NAME = "Song";
-        public static final String COLUMN_ID_SONG = "_id_song";
         public static final String COLUMN_TYPE = "type";
         public static final String COLUMN_IS_FAVORITE = "is_favorite";
         public static final String COLUMN_LINK = "link";

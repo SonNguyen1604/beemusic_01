@@ -11,7 +11,6 @@ public final class AlbumSourceContract {
 
     public static class AlbumEntry extends BaseColumn {
         public static final String TABLE_ALBUM_NAME = "Album";
-        public static final String COLUMN_ID_ALBUM = "_id_album";
         public static final String COLUMN_IMAGE_LINK = "image_link";
     }
 }

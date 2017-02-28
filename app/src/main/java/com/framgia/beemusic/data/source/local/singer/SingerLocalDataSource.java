@@ -37,19 +37,13 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
         try {
             openDatabase();
             singers = null;
-            String sortOrder = SingerSourceContract.SingerEntry.COLUMN_NAME + " ASC";
-            Cursor cursor =
-                mDatabase
-                    .query(SingerSourceContract.SingerEntry.TABLE_SINGER_NAME, null, selection,
-                        args,
-                        null, null, sortOrder);
-            if (cursor != null && cursor.moveToFirst()) {
-                singers = new ArrayList<>();
-                do {
-                    singers.add(new Singer(cursor));
-                } while (cursor.moveToNext());
-                cursor.close();
+            Cursor cursor = getCursor(selection, args);
+            if (cursor == null || cursor.getCount() == 0) return null;
+            singers = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                singers.add(new Singer(cursor));
             }
+            cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -138,6 +132,15 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
                 return Observable.from(mediaCursor);
             }
         });
+    }
+
+    @Override
+    public Cursor getCursor(String selection, String[] args) {
+        String sortOrder = SingerSourceContract.SingerEntry.COLUMN_NAME + " ASC";
+        return
+            mDatabase
+                .query(SingerSourceContract.SingerEntry.TABLE_SINGER_NAME,
+                    null, selection, args, null, null, sortOrder);
     }
 
     private ContentValues convertFromSinger(Singer singer) {

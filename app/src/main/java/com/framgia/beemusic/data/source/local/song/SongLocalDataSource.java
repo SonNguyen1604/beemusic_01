@@ -45,17 +45,13 @@ public class SongLocalDataSource extends DataHelper implements DataSource<Song> 
         try {
             openDatabase();
             songs = null;
-            String sortOrder = SongSourceContract.SongEntry.COLUMN_NAME + " ASC";
-            Cursor cursor =
-                mDatabase.query(SongSourceContract.SongEntry.TABLE_SONG_NAME, null, selection, args,
-                    null, null, sortOrder);
-            if (cursor != null && cursor.moveToFirst()) {
-                songs = new ArrayList<>();
-                do {
-                    songs.add(new Song(cursor));
-                } while (cursor.moveToNext());
-                cursor.close();
+            Cursor cursor = getCursor(selection, args);
+            if (cursor == null || cursor.getCount() == 0) return null;
+            songs = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                songs.add(new Song(cursor));
             }
+            cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -144,6 +140,14 @@ public class SongLocalDataSource extends DataHelper implements DataSource<Song> 
                 return Observable.from(models);
             }
         });
+    }
+
+    @Override
+    public Cursor getCursor(String selection, String[] args) {
+        String sortOrder = SongSourceContract.SongEntry.COLUMN_NAME + " ASC";
+        return
+            mDatabase.query(SongSourceContract.SongEntry.TABLE_SONG_NAME,
+                null, selection, args, null, null, sortOrder);
     }
 
     /**

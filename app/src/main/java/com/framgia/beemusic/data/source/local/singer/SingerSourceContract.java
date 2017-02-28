@@ -11,6 +11,5 @@ public final class SingerSourceContract {
 
     public static class SingerEntry extends BaseColumn {
         public static final String TABLE_SINGER_NAME = "Singer";
-        public static final String COLUMN_ID_SINGER = "_id_singer";
     }
 }

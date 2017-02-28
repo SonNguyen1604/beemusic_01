@@ -1,6 +1,7 @@
 package com.framgia.beemusic.data.source;
 
 import android.content.Context;
+import android.database.Cursor;
 
 import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.data.source.local.album.AlbumLocalDataSource;
@@ -62,6 +63,11 @@ public class AlbumRepository implements DataSource<Album> {
     @Override
     public Observable<Album> getDataObservable(List<Album> models) {
         return mLocalHandler.getDataObservable(models);
+    }
+
+    @Override
+    public Cursor getCursor(String selection, String[] args) {
+        return mLocalHandler.getCursor(selection, args);
     }
 
     private int getCountSong(int id) {

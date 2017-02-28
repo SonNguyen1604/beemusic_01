@@ -5,6 +5,7 @@ import android.database.Cursor;
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
 import com.framgia.beemusic.data.source.SongRepository;
+import com.framgia.beemusic.data.source.SynchronizeRepository;
 
 import rx.Subscriber;
 import rx.Subscription;

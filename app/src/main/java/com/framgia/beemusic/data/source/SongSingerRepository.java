@@ -27,7 +27,7 @@ public class SongSingerRepository extends DataHelper implements DataSourceRelati
     }
 
     @Override
-    public Cursor getModel(String selection, String[] args) {
+    public Cursor getCursor(String selection, String[] args) {
         Cursor cursor = null;
         try {
             openDatabase();
@@ -65,17 +65,14 @@ public class SongSingerRepository extends DataHelper implements DataSourceRelati
     }
 
     @Override
-    public int delete(int idSong, int idSinger) {
+    public int delete(String selection, String[] args) {
         int count = -1;
-        String selection = SongSourceContract.SongEntry.COLUMN_ID_SONG
-            + " = ? " + " and "
-            + SingerSourceContract.SingerEntry.COLUMN_ID_SINGER + " = ?";
         try {
             openDatabase();
             count = mDatabase
                 .delete(
                     SongSingerSourceContract.SongSingerEntry.TABLE_SONG_SINGER_RELATIONSHIP_NAME,
-                    selection, new String[]{String.valueOf(idSong), String.valueOf(idSinger)});
+                    selection, args);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
