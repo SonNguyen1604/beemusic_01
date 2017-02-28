@@ -53,6 +53,23 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
     }
 
     @Override
+    public Cursor getCursor(String selection, String[] args) {
+        String sortOrder = null;
+        Cursor cursor = null;
+        try {
+            openDatabase();
+            sortOrder = AlbumSourceContract.AlbumEntry.COLUMN_NAME + " ASC";
+            cursor = mDatabase
+                .query(AlbumSourceContract.AlbumEntry.TABLE_ALBUM_NAME, null, selection, args,
+                    null, null, sortOrder);
+            closeDatabse();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cursor;
+    }
+
+    @Override
     public int save(Album model) {
         int count = -1;
         try {
@@ -120,28 +137,19 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
     public boolean checkExistModel(int id) {
         if (id == -1) return false;
         String selection = AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
-        List<Album> albums = getModel(selection, new String[]{String.valueOf(id)});
-        return albums != null;
+        Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
+        boolean isExist = cursor != null && cursor.getCount() > 0;
+        cursor.close();
+        return isExist;
     }
 
-    @Override
-    public Observable<Album> getDataObservable(final List<Album> models) {
+    public Observable<Album> getDataObservableByModels(final List<Album> models) {
         return Observable.defer(new Func0<Observable<Album>>() {
             @Override
             public Observable<Album> call() {
                 return Observable.from(models);
             }
         });
-    }
-
-    @Override
-    public Cursor getCursor(String selection, String[] args) {
-        String sortOrder = AlbumSourceContract.AlbumEntry.COLUMN_NAME + " ASC";
-        return mDatabase.query(AlbumSourceContract.AlbumEntry.TABLE_ALBUM_NAME,
-            null,
-            selection,
-            args,
-            null, null, sortOrder);
     }
 
     private ContentValues convertFromAlbum(Album album) {

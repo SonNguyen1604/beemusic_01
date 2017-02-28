@@ -53,6 +53,23 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
     }
 
     @Override
+    public Cursor getCursor(String selection, String[] args) {
+        Cursor cursor = null;
+        try {
+            openDatabase();
+            String sortOrder = SingerSourceContract.SingerEntry.COLUMN_NAME + " ASC";
+            cursor = mDatabase
+                .query(SingerSourceContract.SingerEntry.TABLE_SINGER_NAME, null, selection,
+                    args,
+                    null, null, sortOrder);
+            closeDatabse();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cursor;
+    }
+
+    @Override
     public int save(Singer model) {
         int count = -1;
         try {
@@ -120,27 +137,19 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
     public boolean checkExistModel(int id) {
         if (id == -1) return false;
         String selection = SingerSourceContract.SingerEntry.COLUMN_ID_SINGER + " = ?";
-        List<Singer> singers = getModel(selection, new String[]{String.valueOf(id)});
-        return singers != null;
+        Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
+        boolean isExist = cursor != null && cursor.getCount() > 0;
+        cursor.close();
+        return isExist;
     }
 
-    @Override
-    public Observable<Singer> getDataObservable(final List<Singer> mediaCursor) {
+    public Observable<Singer> getDataObservableByModels(final List<Singer> mediaCursor) {
         return Observable.defer(new Func0<Observable<Singer>>() {
             @Override
             public Observable<Singer> call() {
                 return Observable.from(mediaCursor);
             }
         });
-    }
-
-    @Override
-    public Cursor getCursor(String selection, String[] args) {
-        String sortOrder = SingerSourceContract.SingerEntry.COLUMN_NAME + " ASC";
-        return
-            mDatabase
-                .query(SingerSourceContract.SingerEntry.TABLE_SINGER_NAME,
-                    null, selection, args, null, null, sortOrder);
     }
 
     private ContentValues convertFromSinger(Singer singer) {

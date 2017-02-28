@@ -3,6 +3,7 @@ package com.framgia.beemusic.main;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
 import com.framgia.beemusic.data.source.SongRepository;
 import com.framgia.beemusic.data.source.SynchronizeRepository;
+import com.framgia.beemusic.service.ObservableService;
 
 import rx.subscriptions.CompositeSubscription;
 
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         setContentView(R.layout.activity_main);
         initPresenter();
         checkAndRequestPermission();
+        runningObserverService();
     }
 
     private void checkAndRequestPermission() {
@@ -104,5 +107,9 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
     protected void onPause() {
         super.onPause();
         mPresenter.unsubcribe();
+    }
+
+    private void runningObserverService() {
+        startService(new Intent(this, ObservableService.class));
     }
 }

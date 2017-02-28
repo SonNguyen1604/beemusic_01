@@ -19,6 +19,8 @@ public class Song {
     private int mType;
     private String mGenre;
     private int mDuration;
+    private int mIdAlbum;
+    private int mIdSinger;
 
     public Song(Cursor cursor) {
         mId = cursor.getInt(cursor.getColumnIndex(SongSourceContract.SongEntry.COLUMN_ID_SONG));
@@ -32,8 +34,8 @@ public class Song {
             .COLUMN_DURATION));
     }
 
-    public Song(String name, String link, boolean isFavorite, int type, String genre,
-                int duration) {
+    public Song(String name, String link, boolean isFavorite, int type,
+                String genre, int duration) {
         mName = name;
         mLink = link;
         mIsFavorite = isFavorite;
@@ -107,5 +109,21 @@ public class Song {
 
     public void setDuration(int duration) {
         mDuration = duration;
+    }
+
+    public int getIdSinger() {
+        return mIdSinger;
+    }
+
+    public void setIdSinger(int idSinger) {
+        mIdSinger = idSinger;
+    }
+
+    public int getIdAlbum() {
+        return mIdAlbum;
+    }
+
+    public void setIdAlbum(int idAlbum) {
+        mIdAlbum = idAlbum;
     }
 }

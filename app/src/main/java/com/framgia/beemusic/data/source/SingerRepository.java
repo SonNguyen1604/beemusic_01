@@ -35,6 +35,11 @@ public class SingerRepository implements DataSource<Singer> {
     }
 
     @Override
+    public Cursor getCursor(String selection, String[] args) {
+        return mLocalHandler.getCursor(selection, args);
+    }
+
+    @Override
     public int save(Singer model) {
         if (checkExistModel(model.getId())) return update(model);
         return mLocalHandler.save(model);
@@ -60,16 +65,10 @@ public class SingerRepository implements DataSource<Singer> {
         return mLocalHandler.checkExistModel(id);
     }
 
-    @Override
-    public Observable<Singer> getDataObservable(List<Singer> models) {
-        return mLocalHandler.getDataObservable(models);
+    public Observable<Singer> getDataObservableByModels(List<Singer> models) {
+        return mLocalHandler.getDataObservableByModels(models);
     }
-
-    @Override
-    public Cursor getCursor(String selection, String[] args) {
-        return mLocalHandler.getCursor(selection, args);
-    }
-
+    
     public int getCountSong(int id) {
         String selection = SingerSourceContract.SingerEntry.COLUMN_ID_SINGER + " = ?";
         List<Singer> singers = getModel(selection, new String[]{String.valueOf(id)});

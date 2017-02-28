@@ -4,7 +4,6 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.provider.MediaStore;
 
 import com.framgia.beemusic.data.model.Song;
 import com.framgia.beemusic.data.source.DataSource;
@@ -20,10 +19,6 @@ import rx.functions.Func0;
  * Created by beepi on 17/02/2017.
  */
 public class SongLocalDataSource extends DataHelper implements DataSource<Song> {
-    private static String[] genresProjection = {
-        MediaStore.Audio.Genres.NAME,
-        MediaStore.Audio.Genres._ID
-    };
     private static SongLocalDataSource sSongLocalDataSource;
     private ContentResolver mContentResolver;
 
@@ -58,6 +53,23 @@ public class SongLocalDataSource extends DataHelper implements DataSource<Song> 
             closeDatabse();
         }
         return songs;
+    }
+
+    @Override
+    public Cursor getCursor(String selection, String[] args) {
+        String sortOrder = null;
+        Cursor cursor = null;
+        try {
+            openDatabase();
+            sortOrder = SongSourceContract.SongEntry.COLUMN_NAME + " ASC";
+            cursor =
+                mDatabase.query(SongSourceContract.SongEntry.TABLE_SONG_NAME, null, selection, args,
+                    null, null, sortOrder);
+            closeDatabse();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return cursor;
     }
 
     @Override
@@ -128,26 +140,20 @@ public class SongLocalDataSource extends DataHelper implements DataSource<Song> 
     public boolean checkExistModel(int id) {
         if (id == -1) return false;
         String selection = SongSourceContract.SongEntry.COLUMN_ID_SONG + " = ?";
-        List<Song> songs = getModel(selection, new String[]{String.valueOf(id)});
-        return songs != null;
+        Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
+        boolean isExist = cursor != null && cursor.getCount() > 0;
+        cursor.close();
+        return isExist;
     }
 
     @Override
-    public Observable<Song> getDataObservable(final List<Song> models) {
+    public Observable<Song> getDataObservableByModels(final List<Song> models) {
         return Observable.defer(new Func0<Observable<Song>>() {
             @Override
             public Observable<Song> call() {
                 return Observable.from(models);
             }
         });
-    }
-
-    @Override
-    public Cursor getCursor(String selection, String[] args) {
-        String sortOrder = SongSourceContract.SongEntry.COLUMN_NAME + " ASC";
-        return
-            mDatabase.query(SongSourceContract.SongEntry.TABLE_SONG_NAME,
-                null, selection, args, null, null, sortOrder);
     }
 
     /**

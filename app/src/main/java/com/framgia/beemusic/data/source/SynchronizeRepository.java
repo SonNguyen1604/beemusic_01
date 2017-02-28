@@ -5,15 +5,15 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.MediaStore;
 
-import com.framgia.beemusic.Application;
+import com.framgia.beemusic.BeeApplication;
 import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.data.model.Singer;
 import com.framgia.beemusic.data.model.Song;
 import com.framgia.beemusic.data.source.local.album.AlbumSourceContract;
 import com.framgia.beemusic.data.source.local.singer.SingerSourceContract;
-import com.framgia.beemusic.data.source.local.singersong.SongSingerSourceContract;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
 import com.framgia.beemusic.data.source.local.songalbum.SongAlbumSourceContract;
+import com.framgia.beemusic.data.source.local.songsinger.SongSingerSourceContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,12 +42,12 @@ public class SynchronizeRepository implements SynchronizeContract {
 
     private SynchronizeRepository() {
         mContentResolver =
-            Application.getContext().getContentResolver();
-        mSongHandler = SongRepository.getInstant(Application.getContext());
-        mAlbumHandler = AlbumRepository.getInstant(Application.getContext());
-        mSingerHandler = SingerRepository.getInstant(Application.getContext());
-        mSongAlbumHandler = SongAlbumRepository.getInstant(Application.getContext());
-        mSongSingerHandler = SongSingerRepository.getInstant(Application.getContext());
+            BeeApplication.getInstant().getContentResolver();
+        mSongHandler = SongRepository.getInstant(BeeApplication.getInstant());
+        mAlbumHandler = AlbumRepository.getInstant(BeeApplication.getInstant());
+        mSingerHandler = SingerRepository.getInstant(BeeApplication.getInstant());
+        mSongAlbumHandler = SongAlbumRepository.getInstant(BeeApplication.getInstant());
+        mSongSingerHandler = SongSingerRepository.getInstant(BeeApplication.getInstant());
     }
 
     public static SynchronizeRepository getInstant() {

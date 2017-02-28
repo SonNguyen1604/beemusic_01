@@ -6,8 +6,8 @@ import android.database.Cursor;
 
 import com.framgia.beemusic.data.source.local.DataHelper;
 import com.framgia.beemusic.data.source.local.singer.SingerSourceContract;
-import com.framgia.beemusic.data.source.local.singersong.SongSingerSourceContract;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
+import com.framgia.beemusic.data.source.local.songsinger.SongSingerSourceContract;
 
 /**
  * Created by beepi on 20/02/2017.
