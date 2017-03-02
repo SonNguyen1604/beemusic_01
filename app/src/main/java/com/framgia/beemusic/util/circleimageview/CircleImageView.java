@@ -1,4 +1,4 @@
-package com.framgia.beemusic.util;
+package com.framgia.beemusic.util.circleimageview;
 
 import android.content.Context;
 import android.content.res.TypedArray;
