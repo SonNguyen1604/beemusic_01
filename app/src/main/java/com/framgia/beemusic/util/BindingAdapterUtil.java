@@ -22,4 +22,11 @@ public class BindingAdapterUtil {
         drawlayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
     }
+
+    @BindingAdapter({"title", "color"})
+    public static void setSupportActionBar(Toolbar toolbar, String title, int color) {
+        toolbar.inflateMenu(R.menu.toolbar_main);
+        toolbar.setTitle(title);
+        toolbar.setTitleTextColor(color);
+    }
 }
