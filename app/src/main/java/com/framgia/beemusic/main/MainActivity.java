@@ -5,12 +5,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
@@ -24,7 +27,12 @@ import com.framgia.beemusic.service.ObservableService;
 
 import rx.subscriptions.CompositeSubscription;
 
-public class MainActivity extends AppCompatActivity implements MainContract.View {
+import static com.framgia.beemusic.util.Constant.CONTENT_EMAIL;
+import static com.framgia.beemusic.util.Constant.GMAIL;
+import static com.framgia.beemusic.util.Constant.SUBJECT_EMAIL;
+
+public class MainActivity extends AppCompatActivity
+    implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
     private MainContract.Presenter mPresenter;
     private static final int READ_EXTERNAL_STORAGE_CODE = 1;
     private ActivityMainBinding mBinding;
@@ -35,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mBinding.setMainActivity(this);
+        mBinding.navigationView.setNavigationItemSelectedListener(this);
         initPresenter();
         checkAndRequestPermission();
         runningObserverService();
@@ -117,5 +126,40 @@ public class MainActivity extends AppCompatActivity implements MainContract.View
 
     private void runningObserverService() {
         startService(new Intent(this, ObservableService.class));
+    }
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.item_song:
+                // todo open fragment song
+                break;
+            case R.id.item_album:
+                // todo open fragment album
+                break;
+            case R.id.item_singer:
+                // todo open fragment singer
+                break;
+            case R.id.item_favorite:
+                // todo open fragment favorite
+                break;
+            case R.id.item_feadback:
+                sendFeadback();
+                break;
+            default:
+                break;
+        }
+        mBinding.drawlayout.closeDrawers();
+        return true;
+    }
+
+    private void sendFeadback() {
+        Intent intent = new Intent(Intent.ACTION_SENDTO);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_SUBJECT, SUBJECT_EMAIL);
+        intent.putExtra(Intent.EXTRA_TEXT, CONTENT_EMAIL);
+        intent.setData(Uri.parse(GMAIL));
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
     }
 }
