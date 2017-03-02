@@ -5,4 +5,6 @@
         We need external permission to load allmusic
     </string>
     <string name="msg_not_load_mediastore">App not load music in media store</string>
+    <string name="error_support_scale">ScaleType %s not supported</string>
+    <string name="error_bound_view">adjustViewBounds not supported</string>
 </resources>
