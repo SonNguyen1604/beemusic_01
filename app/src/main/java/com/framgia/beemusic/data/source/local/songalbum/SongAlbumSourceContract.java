@@ -3,9 +3,9 @@ package com.framgia.beemusic.data.source.local.songalbum;
 import com.framgia.beemusic.data.source.local.BaseColumn;
 
 /**
- * Created by beepi on 17/02/2017.
+ * Created by beepi on 28/02/2017.
  */
-public final class SongAlbumSourceContract {
+public class SongAlbumSourceContract {
     private SongAlbumSourceContract() {
     }
 

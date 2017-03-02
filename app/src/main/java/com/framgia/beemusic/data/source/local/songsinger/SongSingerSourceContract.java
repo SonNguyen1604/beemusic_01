@@ -1,11 +1,11 @@
-package com.framgia.beemusic.data.source.local.singersong;
+package com.framgia.beemusic.data.source.local.songsinger;
 
 import com.framgia.beemusic.data.source.local.BaseColumn;
 
 /**
- * Created by beepi on 17/02/2017.
+ * Created by beepi on 28/02/2017.
  */
-public final class SongSingerSourceContract {
+public class SongSingerSourceContract {
     private SongSingerSourceContract() {
     }
 

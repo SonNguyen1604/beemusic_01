@@ -3,7 +3,7 @@ package com.framgia.beemusic.data.source;
 import android.database.Cursor;
 
 /**
- * Created by beepi on 20/02/2017.
+ * Created by beepi on 28/02/2017.
  */
 public interface DataSourceRelationship {
     Cursor getCursor(String selection, String[] args);

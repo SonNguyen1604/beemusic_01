@@ -61,8 +61,8 @@ public class AlbumRepository implements DataSource<Album> {
     }
 
     @Override
-    public Observable<Album> getDataObservable(List<Album> models) {
-        return mLocalHandler.getDataObservable(models);
+    public Observable<Album> getDataObservableByModels(List<Album> models) {
+        return mLocalHandler.getDataObservableByModels(models);
     }
 
     @Override

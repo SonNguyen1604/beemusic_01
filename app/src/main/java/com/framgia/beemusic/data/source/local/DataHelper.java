@@ -11,7 +11,6 @@ import static com.framgia.beemusic.data.source.local.album.AlbumSourceContract.A
 import static com.framgia.beemusic.data.source.local.album.AlbumSourceContract.AlbumEntry.TABLE_ALBUM_NAME;
 import static com.framgia.beemusic.data.source.local.singer.SingerSourceContract.SingerEntry.COLUMN_ID_SINGER;
 import static com.framgia.beemusic.data.source.local.singer.SingerSourceContract.SingerEntry.TABLE_SINGER_NAME;
-import static com.framgia.beemusic.data.source.local.singersong.SongSingerSourceContract.SongSingerEntry.TABLE_SONG_SINGER_RELATIONSHIP_NAME;
 import static com.framgia.beemusic.data.source.local.song.SongSourceContract.SongEntry.COLUMN_DURATION;
 import static com.framgia.beemusic.data.source.local.song.SongSourceContract.SongEntry.COLUMN_GENRE;
 import static com.framgia.beemusic.data.source.local.song.SongSourceContract.SongEntry.COLUMN_ID_SONG;
@@ -20,6 +19,7 @@ import static com.framgia.beemusic.data.source.local.song.SongSourceContract.Son
 import static com.framgia.beemusic.data.source.local.song.SongSourceContract.SongEntry.COLUMN_TYPE;
 import static com.framgia.beemusic.data.source.local.song.SongSourceContract.SongEntry.TABLE_SONG_NAME;
 import static com.framgia.beemusic.data.source.local.songalbum.SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME;
+import static com.framgia.beemusic.data.source.local.songsinger.SongSingerSourceContract.SongSingerEntry.TABLE_SONG_SINGER_RELATIONSHIP_NAME;
 
 /**
  * Created by beepi on 21/03/2016.
