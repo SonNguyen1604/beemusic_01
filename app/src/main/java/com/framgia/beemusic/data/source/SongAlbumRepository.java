@@ -27,7 +27,7 @@ public class SongAlbumRepository extends DataHelper implements DataSourceRelatio
     }
 
     @Override
-    public Cursor getModel(String selection, String[] args) {
+    public Cursor getCursor(String selection, String[] args) {
         Cursor cursor = null;
         try {
             openDatabase();
@@ -64,17 +64,14 @@ public class SongAlbumRepository extends DataHelper implements DataSourceRelatio
     }
 
     @Override
-    public int delete(int idSong, int idAlbum) {
+    public int delete(String selection, String[] args) {
         int count = -1;
         try {
-            String selection = SongSourceContract.SongEntry.COLUMN_ID_SONG
-                + " = ? " + " and "
-                + AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
             openDatabase();
             count =
                 mDatabase.delete(
                     SongAlbumSourceContract.SongAlbumEntry.TABLE_SONG_ALBUM_RELATIONSHIP_NAME,
-                    selection, new String[]{String.valueOf(idSong), String.valueOf(idAlbum)});
+                    selection, args);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

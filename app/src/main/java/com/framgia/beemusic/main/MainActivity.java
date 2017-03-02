@@ -15,6 +15,7 @@ import com.framgia.beemusic.R;
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
 import com.framgia.beemusic.data.source.SongRepository;
+import com.framgia.beemusic.data.source.SynchronizeRepository;
 
 import rx.subscriptions.CompositeSubscription;
 

@@ -1,5 +1,7 @@
 package com.framgia.beemusic.data.source;
 
+import android.database.Cursor;
+
 import java.util.List;
 
 import rx.Observable;
@@ -15,4 +17,5 @@ public interface DataSource<T> {
     void deleteAlls();
     boolean checkExistModel(int id);
     Observable<T> getDataObservable(List<T> models);
+    Cursor getCursor(String selection, String[] args);
 }

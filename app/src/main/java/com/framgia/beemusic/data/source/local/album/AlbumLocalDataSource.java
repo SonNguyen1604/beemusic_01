@@ -37,18 +37,13 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
         try {
             openDatabase();
             albums = null;
-            String sortOrder = AlbumSourceContract.AlbumEntry.COLUMN_NAME + " ASC";
-            Cursor cursor =
-                mDatabase
-                    .query(AlbumSourceContract.AlbumEntry.TABLE_ALBUM_NAME, null, selection, args,
-                        null, null, sortOrder);
-            if (cursor != null && cursor.moveToFirst()) {
-                albums = new ArrayList<>();
-                do {
-                    albums.add(new Album(cursor));
-                } while (cursor.moveToNext());
-                cursor.close();
+            Cursor cursor = getCursor(selection, args);
+            if (cursor == null || cursor.getCount() == 0) return null;
+            albums = new ArrayList<>();
+            while (cursor.moveToNext()) {
+                albums.add(new Album(cursor));
             }
+            cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -137,6 +132,16 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
                 return Observable.from(models);
             }
         });
+    }
+
+    @Override
+    public Cursor getCursor(String selection, String[] args) {
+        String sortOrder = AlbumSourceContract.AlbumEntry.COLUMN_NAME + " ASC";
+        return mDatabase.query(AlbumSourceContract.AlbumEntry.TABLE_ALBUM_NAME,
+            null,
+            selection,
+            args,
+            null, null, sortOrder);
     }
 
     private ContentValues convertFromAlbum(Album album) {
