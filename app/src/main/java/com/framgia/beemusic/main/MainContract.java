@@ -7,6 +7,7 @@ import com.framgia.beemusic.BasePresenter;
  */
 public interface MainContract {
     interface View {
+        void startObserverService();
     }
 
     interface Presenter extends BasePresenter {

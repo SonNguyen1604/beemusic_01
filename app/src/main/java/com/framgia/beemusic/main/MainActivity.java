@@ -50,7 +50,6 @@ public class MainActivity extends AppCompatActivity
         mBinding.navigationView.setNavigationItemSelectedListener(this);
         initPresenter();
         checkAndRequestPermission();
-        runningObserverService();
     }
 
     private void checkAndRequestPermission() {
@@ -65,7 +64,11 @@ public class MainActivity extends AppCompatActivity
                     new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     WRITE_EXTERNAL_STORAGE_CODE);
             }
-        } else mPresenter.subcribe();
+            return;
+        }
+        if (!ActivityUtils.isInstalled(this)) {
+            mPresenter.subcribe();
+        }
     }
 
     private void showConfirmPermissionDialog() {
@@ -97,7 +100,9 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == WRITE_EXTERNAL_STORAGE_CODE) {
             if (grantResults.length > 0 &&
                 grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                mPresenter.subcribe();
+                if (!ActivityUtils.isInstalled(this)) {
+                    mPresenter.subcribe();
+                }
             }
         }
     }
@@ -126,10 +131,6 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         mPresenter.unsubcribe();
-    }
-
-    private void runningObserverService() {
-        startService(new Intent(this, ObservableService.class));
     }
 
     @Override
@@ -184,5 +185,10 @@ public class MainActivity extends AppCompatActivity
         songFragment = SongFragment.newInstance();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
             songFragment, R.id.linear_content);
+    }
+
+    @Override
+    public void startObserverService() {
+        startService(new Intent(this, ObservableService.class));
     }
 }
