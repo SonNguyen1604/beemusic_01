@@ -5,4 +5,8 @@
     <dimen name="dp_100">100dp</dimen>
     <dimen name="dp_64">64dp</dimen>
     <dimen name="dp_10">10dp</dimen>
+    <dimen name="dp_20">20dp</dimen>
+    <dimen name="pt_10">10pt</dimen>
+    <dimen name="dp_5">5dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
 </resources>
