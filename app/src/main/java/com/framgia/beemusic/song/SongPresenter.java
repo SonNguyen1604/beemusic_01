@@ -1,18 +1,13 @@
 package com.framgia.beemusic.song;
 
-import android.database.Cursor;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
 
-import com.framgia.beemusic.data.model.Singer;
 import com.framgia.beemusic.data.model.Song;
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
 import com.framgia.beemusic.data.source.SongAlbumRepository;
 import com.framgia.beemusic.data.source.SongRepository;
 import com.framgia.beemusic.data.source.SongSingerRepository;
-import com.framgia.beemusic.data.source.local.singer.SingerSourceContract;
-import com.framgia.beemusic.data.source.local.songsinger.SongSingerSourceContract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +29,6 @@ public class SongPresenter implements SongContract.Presenter {
     private SongAlbumRepository mSongAlbumHandler;
     private SongSingerRepository mSongSingerHandler;
     private CompositeSubscription mSubscription;
-    private final static String DEFAULT_SINGER = "unknown";
 
     public SongPresenter(@NonNull SongContract.View view,
                          SongRepository songHandler,
@@ -75,7 +69,8 @@ public class SongPresenter implements SongContract.Presenter {
                 @Override
                 public void onNext(Song song) {
                     songs.add(song);
-                    singers.add(getSinger(song.getId()));
+                    singers.add(mSingerHandler.getSingerNameByIds(
+                        mSongSingerHandler.getListId(song.getId())));
                 }
             });
         mSubscription.add(subscription);
@@ -87,32 +82,15 @@ public class SongPresenter implements SongContract.Presenter {
     }
 
     @Override
-    public String getSinger(int idSong) {
-        String selection = SongSingerSourceContract.SongSingerEntry.COLUMN_ID_SONG + " = ?";
-        int idSinger;
-        List<Singer> singers;
-        String singer = new String();
-        Cursor cursor = mSongSingerHandler.getCursor(selection, new String[]{String.valueOf
-            (idSong)});
-        if (cursor == null || cursor.getCount() == 0) return null;
-        while (cursor.moveToNext()) {
-            idSinger = cursor.getInt(cursor.getColumnIndex(SongSingerSourceContract
-                .SongSingerEntry.COLUMN_ID_SINGER));
-            selection = SingerSourceContract.SingerEntry.COLUMN_ID_SINGER + " = ?";
-            singers = mSingerHandler.getModel(selection, new String[]{String.valueOf
-                (idSinger)});
-            if (singers == null) continue;
-            singer = singer.concat(singers.get(0).getName()).concat(",");
-        }
-        cursor.close();
-        singer = singer.substring(0, singer.length() - 1);
-        if (TextUtils.isEmpty(singer)) singer = DEFAULT_SINGER;
-        return singer;
-    }
-
-    @Override
     public void onDeleteSong(Song song, int pos) {
         mView.notifyItemRemove(pos);
+        if (song == null) return;
+        int idSong = song.getId();
+        mSongHandler.delete(idSong);
+        mSongAlbumHandler.delete(idSong);
+        mSongSingerHandler.delete(idSong);
+        mAlbumHandler.updateCountForDelSong(mSongAlbumHandler.getListId(idSong));
+        mSingerHandler.updateCountByDelSong(mSongSingerHandler.getListId(idSong));
     }
 
     @Override

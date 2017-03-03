@@ -18,7 +18,6 @@ public interface SongContract {
     }
 
     interface Presenter extends BasePresenter {
-        String getSinger(int idSong);
         void onDeleteSong(Song song, int pos);
         void onAddToAlbum(Song song, SwipeLayout layout);
         void onAddToFavorite(Song song, SwipeLayout layout);
