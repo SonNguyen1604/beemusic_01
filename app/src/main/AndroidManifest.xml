@@ -23,8 +23,6 @@
                 android:name="android.app.searchable"
                 android:resource="@xml/searchable"/>
         </activity>
-        <service
-            android:name=".service.ObservableService"
-            android:process=":remote"/>
+        <service android:name=".service.ObservableService"/>
     </application>
 </manifest>

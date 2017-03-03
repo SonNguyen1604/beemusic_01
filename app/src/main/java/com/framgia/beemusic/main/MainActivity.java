@@ -71,7 +71,9 @@ public class MainActivity extends AppCompatActivity
         }
         if (!ActivityUtils.isInstalled(this)) {
             mPresenter.subcribe();
+            return;
         }
+        startObserverService();
     }
 
     private void showConfirmPermissionDialog() {
@@ -188,9 +190,9 @@ public class MainActivity extends AppCompatActivity
         songFragment = SongFragment.newInstance();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
             songFragment, R.id.linear_content);
-        new SongPresenter(songFragment,SongRepository.getInstant(this),
-            AlbumRepository.getInstant(this),SingerRepository.getInstant(this),
-            SongAlbumRepository.getInstant(this),SongSingerRepository.getInstant(this));
+        new SongPresenter(songFragment, SongRepository.getInstant(this),
+            AlbumRepository.getInstant(this), SingerRepository.getInstant(this),
+            SongAlbumRepository.getInstant(this), SongSingerRepository.getInstant(this));
     }
 
     @Override
