@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="@dimen/dp_100"
-              android:background="@color/color_green"
+              android:background="@color/color_green_600"
               android:orientation="horizontal">
 
     <com.framgia.beemusic.util.circleimageview.CircleImageView

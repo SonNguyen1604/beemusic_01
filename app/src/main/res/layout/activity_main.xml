@@ -28,7 +28,7 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/color_green"
+                android:background="@color/color_green_600"
                 android:minHeight="?attr/actionBarSize"
                 app:theme="@style/SearchView"
                 bind:activity="@{mainActivity}"
@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@color/color_blue_sky"
+            android:background="@color/color_grey_100"
             app:headerLayout="@layout/navigation_header_main"
             app:itemTextColor="@color/color_black"
             app:menu="@menu/navigation_main"/>

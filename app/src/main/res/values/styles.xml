@@ -8,8 +8,8 @@
     </style>
 
     <style name="AppThemeNoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/color_less_green</item>
-        <item name="colorPrimaryDark">@color/color_less_green</item>
+        <item name="colorPrimary">@color/color_green_300</item>
+        <item name="colorPrimaryDark">@color/color_green_300</item>
     </style>
 
     <style name="ActionBarToggle" parent="Widget.AppCompat.DrawerArrowToggle">
