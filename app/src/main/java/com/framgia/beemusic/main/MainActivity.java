@@ -10,14 +10,15 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.SearchView;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
+import com.framgia.beemusic.BaseFragmentView;
 import com.framgia.beemusic.R;
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
@@ -38,11 +39,11 @@ import static com.framgia.beemusic.util.Constant.GMAIL;
 import static com.framgia.beemusic.util.Constant.SUBJECT_EMAIL;
 
 public class MainActivity extends AppCompatActivity
-    implements MainContract.View, NavigationView.OnNavigationItemSelectedListener,
-    SearchView.OnQueryTextListener {
+    implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
     private MainContract.Presenter mPresenter;
     private static final int WRITE_EXTERNAL_STORAGE_CODE = 1;
     private ActivityMainBinding mBinding;
+    private SongFragment mSongFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity
             return;
         }
         startObserverService();
+        initSongFragment();
     }
 
     private void showConfirmPermissionDialog() {
@@ -174,25 +176,23 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public boolean onQueryTextSubmit(String query) {
-        return false;
+    public void initSongFragment() {
+        mSongFragment =
+            (SongFragment) getSupportFragmentManager().findFragmentById(R.id.linear_content);
+        if (mSongFragment != null) return;
+        mSongFragment = SongFragment.newInstance();
+        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+            mSongFragment, R.id.linear_content);
+        new SongPresenter(mSongFragment, SongRepository.getInstant(this),
+            AlbumRepository.getInstant(this), SingerRepository.getInstant(this),
+            SongAlbumRepository.getInstant(this), SongSingerRepository.getInstant(this));
     }
 
     @Override
-    public boolean onQueryTextChange(String newText) {
-        return false;
-    }
-
-    private void initSongFragment() {
-        SongFragment songFragment =
-            (SongFragment) getSupportFragmentManager().findFragmentById(R.id.linear_content);
-        if (songFragment != null) return;
-        songFragment = SongFragment.newInstance();
-        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
-            songFragment, R.id.linear_content);
-        new SongPresenter(songFragment, SongRepository.getInstant(this),
-            AlbumRepository.getInstant(this), SingerRepository.getInstant(this),
-            SongAlbumRepository.getInstant(this), SongSingerRepository.getInstant(this));
+    public void onSearch(String keySearch) {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.linear_content);
+        if (fragment == null || !(fragment instanceof BaseFragmentView)) return;
+        ((BaseFragmentView) fragment).onSearch(keySearch);
     }
 
     @Override

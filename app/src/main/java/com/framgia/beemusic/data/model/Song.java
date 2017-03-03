@@ -1,13 +1,16 @@
 package com.framgia.beemusic.data.model;
 
 import android.database.Cursor;
+import android.databinding.BaseObservable;
+import android.databinding.Bindable;
 
+import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
 
 /**
  * Created by beepi on 17/02/2017.
  */
-public class Song {
+public class Song extends BaseObservable {
     public static boolean IS_FAVORITE = true;
     public static boolean IS_NON_FAVORITE = false;
     public static int TYPE_MEDIA = 0;
@@ -77,12 +80,14 @@ public class Song {
         mLink = link;
     }
 
+    @Bindable
     public boolean getIsFavorite() {
         return mIsFavorite;
     }
 
     public void setIsFavorite(boolean isFavorite) {
         mIsFavorite = isFavorite;
+        notifyPropertyChanged(BR.isFavorite);
     }
 
     public int getType() {

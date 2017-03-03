@@ -111,7 +111,6 @@ public class SongLocalDataSource extends DataHelper implements DataSource<Song> 
             ContentValues contentValues = convertContentValueFromSong(model);
             if (contentValues == null) return count;
             openDatabase();
-            mDatabase.beginTransaction();
             count = mDatabase.update(SongSourceContract.SongEntry.TABLE_SONG_NAME, contentValues,
                 SongSourceContract.SongEntry.COLUMN_ID_SONG + " = ?",
                 new String[]{String.valueOf(model.getId())});
