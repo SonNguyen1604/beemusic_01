@@ -30,7 +30,10 @@
                 android:layout_height="wrap_content"
                 android:background="@color/color_green"
                 android:minHeight="?attr/actionBarSize"
+                app:theme="@style/SearchView"
+                bind:activity="@{mainActivity}"
                 bind:color="@{@color/color_white}"
+                bind:onListener="@{mainActivity}"
                 bind:title="@{@string/app_name}"/>
 
             <LinearLayout

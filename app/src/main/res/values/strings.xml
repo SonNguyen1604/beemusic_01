@@ -15,4 +15,6 @@
     <string name="title_local_music">Local Music</string>
     <string name="msg_open_drawer">open</string>
     <string name="msg_close_drawer">close</string>
+    <string name="title_search">search</string>
+    <string name="search_hint">search...</string>
 </resources>

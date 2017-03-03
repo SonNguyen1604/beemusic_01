@@ -16,4 +16,9 @@
         <item name="colorControlNormal">@color/color_white</item>
         <item name="android:colorControlNormal">@color/color_white</item>
     </style>
+
+    <style name="SearchView" parent="Widget.AppCompat.SearchView">
+        <item name="android:editTextColor">@color/color_white</item>
+        <item name="android:textColorHint">@color/color_white</item>
+    </style>
 </resources>
