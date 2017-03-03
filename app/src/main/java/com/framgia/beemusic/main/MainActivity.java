@@ -25,6 +25,8 @@ import com.framgia.beemusic.data.source.SongRepository;
 import com.framgia.beemusic.data.source.SynchronizeRepository;
 import com.framgia.beemusic.databinding.ActivityMainBinding;
 import com.framgia.beemusic.service.ObservableService;
+import com.framgia.beemusic.song.SongFragment;
+import com.framgia.beemusic.util.ActivityUtils;
 
 import rx.subscriptions.CompositeSubscription;
 
@@ -134,7 +136,7 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.item_song:
-                // todo open fragment song
+                initSongFragment();
                 break;
             case R.id.item_album:
                 // todo open fragment album
@@ -173,5 +175,14 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+    private void initSongFragment() {
+        SongFragment songFragment =
+            (SongFragment) getSupportFragmentManager().findFragmentById(R.id.linear_content);
+        if (songFragment != null) return;
+        songFragment = SongFragment.newInstance();
+        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+            songFragment, R.id.linear_content);
     }
 }
