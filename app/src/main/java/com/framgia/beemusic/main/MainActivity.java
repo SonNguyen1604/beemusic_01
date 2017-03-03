@@ -13,6 +13,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
@@ -32,10 +34,12 @@ import static com.framgia.beemusic.util.Constant.GMAIL;
 import static com.framgia.beemusic.util.Constant.SUBJECT_EMAIL;
 
 public class MainActivity extends AppCompatActivity
-    implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
+    implements MainContract.View, NavigationView.OnNavigationItemSelectedListener,
+    SearchView.OnQueryTextListener {
     private MainContract.Presenter mPresenter;
     private static final int READ_EXTERNAL_STORAGE_CODE = 1;
     private ActivityMainBinding mBinding;
+    private SearchView mSearchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,5 +165,28 @@ public class MainActivity extends AppCompatActivity
         intent.setData(Uri.parse(GMAIL));
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.toolbar_main, menu);
+        setupSearchView(menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void setupSearchView(Menu menu) {
+        MenuItem itemSearch = menu.findItem(R.id.action_search);
+        mSearchView = (SearchView) itemSearch.getActionView();
+        mSearchView.setOnQueryTextListener(this);
     }
 }
