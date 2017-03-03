@@ -21,11 +21,14 @@ import android.widget.Toast;
 import com.framgia.beemusic.R;
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
+import com.framgia.beemusic.data.source.SongAlbumRepository;
 import com.framgia.beemusic.data.source.SongRepository;
+import com.framgia.beemusic.data.source.SongSingerRepository;
 import com.framgia.beemusic.data.source.SynchronizeRepository;
 import com.framgia.beemusic.databinding.ActivityMainBinding;
 import com.framgia.beemusic.service.ObservableService;
 import com.framgia.beemusic.song.SongFragment;
+import com.framgia.beemusic.song.SongPresenter;
 import com.framgia.beemusic.util.ActivityUtils;
 
 import rx.subscriptions.CompositeSubscription;
@@ -185,6 +188,9 @@ public class MainActivity extends AppCompatActivity
         songFragment = SongFragment.newInstance();
         ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
             songFragment, R.id.linear_content);
+        new SongPresenter(songFragment,SongRepository.getInstant(this),
+            AlbumRepository.getInstant(this),SingerRepository.getInstant(this),
+            SongAlbumRepository.getInstant(this),SongSingerRepository.getInstant(this));
     }
 
     @Override

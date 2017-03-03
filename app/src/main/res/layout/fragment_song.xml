@@ -1,5 +1,14 @@
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    >
+        xmlns:bind="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="com.framgia.beemusic.util.LayoutManager"/>
+
+        <variable
+            name="adapter"
+            type="com.framgia.beemusic.song.SongAdapter"/>
+    </data>
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,7 +48,9 @@
                 android:id="@+id/recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/dp_10"/>
+                android:layout_marginTop="@dimen/dp_10"
+                bind:adapter="@{adapter}"
+                bind:layoutManager="@{LayoutManager.linear()}"/>
         </LinearLayout>
     </RelativeLayout>
 
