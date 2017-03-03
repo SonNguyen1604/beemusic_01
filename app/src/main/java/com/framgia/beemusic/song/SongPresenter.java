@@ -2,6 +2,7 @@ package com.framgia.beemusic.song;
 
 import android.database.Cursor;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.framgia.beemusic.data.model.Singer;
 import com.framgia.beemusic.data.model.Song;
@@ -16,6 +17,7 @@ import com.framgia.beemusic.data.source.local.songsinger.SongSingerSourceContrac
 import java.util.ArrayList;
 import java.util.List;
 
+import ru.rambler.libs.swipe_layout.SwipeLayout;
 import rx.Subscriber;
 import rx.Subscription;
 import rx.schedulers.Schedulers;
@@ -32,6 +34,7 @@ public class SongPresenter implements SongContract.Presenter {
     private SongAlbumRepository mSongAlbumHandler;
     private SongSingerRepository mSongSingerHandler;
     private CompositeSubscription mSubscription;
+    private final static String DEFAULT_SINGER = "unknown";
 
     public SongPresenter(@NonNull SongContract.View view,
                          SongRepository songHandler,
@@ -66,6 +69,7 @@ public class SongPresenter implements SongContract.Presenter {
 
                 @Override
                 public void onError(Throwable e) {
+                    e.printStackTrace();
                 }
 
                 @Override
@@ -102,6 +106,32 @@ public class SongPresenter implements SongContract.Presenter {
         }
         cursor.close();
         singer = singer.substring(0, singer.length() - 1);
+        if (TextUtils.isEmpty(singer)) singer = DEFAULT_SINGER;
         return singer;
+    }
+
+    @Override
+    public void onDeleteSong(Song song, int pos) {
+        mView.notifyItemRemove(pos);
+    }
+
+    @Override
+    public void onAddToAlbum(Song song, SwipeLayout layout) {
+        layout.animateReset();
+    }
+
+    @Override
+    public void onAddToFavorite(Song song, SwipeLayout layout) {
+        layout.animateReset();
+    }
+
+    @Override
+    public void onRemoveFromFavorite(Song song, SwipeLayout layout) {
+        layout.animateReset();
+    }
+
+    @Override
+    public void onOpenPlayMusic(Song song) {
+        // todo open play music
     }
 }

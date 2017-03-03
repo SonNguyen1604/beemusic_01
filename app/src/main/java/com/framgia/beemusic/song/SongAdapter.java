@@ -16,10 +16,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
     private List<Song> mSongList;
     private List<String> mSingerList;
     private LayoutInflater mLayoutInflater;
+    private SongContract.Presenter mPresenter;
 
-    public SongAdapter(List<Song> songs, List<String> singers) {
+    public SongAdapter(List<Song> songs, List<String> singers, SongContract.Presenter presenter) {
         mSongList = songs;
         mSingerList = singers;
+        mPresenter = presenter;
+    }
+
+    public List<Song> getSongList() {
+        return mSongList;
+    }
+
+    public List<String> getSingerList() {
+        return mSingerList;
     }
 
     @Override
@@ -32,7 +42,7 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
 
     @Override
     public void onBindViewHolder(SongViewHolder holder, int position) {
-        holder.bind(mSongList.get(position), mSingerList.get(position));
+        holder.bind(mSongList.get(position), mSingerList.get(position), position);
     }
 
     @Override
@@ -48,9 +58,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.SongViewHolder
             mBinding = binding;
         }
 
-        public void bind(Song song, String singer) {
+        public void bind(Song song, String singer, int pos) {
             if (song != null) mBinding.setSong(song);
             mBinding.setSinger(singer);
+            mBinding.setPosition(pos);
+            mBinding.setPresenter(mPresenter);
             mBinding.executePendingBindings();
         }
     }
