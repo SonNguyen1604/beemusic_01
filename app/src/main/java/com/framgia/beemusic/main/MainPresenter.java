@@ -45,6 +45,7 @@ public class MainPresenter implements MainContract.Presenter {
             .subscribe(new Subscriber<Cursor>() {
                 @Override
                 public void onCompleted() {
+                    mView.startObserverService();
                 }
 
                 @Override
