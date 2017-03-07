@@ -1,6 +1,7 @@
 package com.framgia.beemusic.data.source.local;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -58,12 +59,14 @@ public class DataHelper extends SQLiteOpenHelper {
             + COLUMN_NAME + TEXT_TYPE + " )";
     private static final String COMMA_CREATE_TEMP_SONG_ALBUM_TABLE =
         COMMA_CREATE_TABLE + TABLE_SONG_ALBUM_RELATIONSHIP_NAME + " ("
-            + COLUMN_ID_SONG + INTERGER_TYPE + PRIMARY_KEY + COMMA_SEP
-            + COLUMN_ID_ALBUM + INTERGER_TYPE + PRIMARY_KEY + " )";
+            + COLUMN_ID_SONG + INTERGER_TYPE + COMMA_SEP
+            + COLUMN_ID_ALBUM + INTERGER_TYPE + COMMA_SEP
+            + PRIMARY_KEY + "(" + COLUMN_ID_SONG + COMMA_SEP + COLUMN_ID_ALBUM + "))";
     private static final String COMMA_CREATE_TEMP_SINGER_SONG_TABLE =
         COMMA_CREATE_TABLE + TABLE_SONG_SINGER_RELATIONSHIP_NAME + " ("
-            + COLUMN_ID_SINGER + INTERGER_TYPE + PRIMARY_KEY + COMMA_SEP
-            + COLUMN_ID_SONG + INTERGER_TYPE + PRIMARY_KEY + " )";
+            + COLUMN_ID_SINGER + INTERGER_TYPE + COMMA_SEP
+            + COLUMN_ID_SONG + INTERGER_TYPE + COMMA_SEP
+            + PRIMARY_KEY + "(" + COLUMN_ID_SONG + COMMA_SEP + COLUMN_ID_SINGER + "))";
     private static final String COMMA_DROP_SONG_TABLE =
         DROPTABLE_IF_EXIST + TABLE_SONG_NAME;
     private static final String COMMA_DROP_ALBUM_TABLE =
@@ -105,5 +108,10 @@ public class DataHelper extends SQLiteOpenHelper {
     protected void closeDatabse() {
         if (mDatabase == null) return;
         mDatabase.close();
+    }
+
+    protected void closeCursor(Cursor cursor) {
+        if (cursor == null) return;
+        cursor.close();
     }
 }

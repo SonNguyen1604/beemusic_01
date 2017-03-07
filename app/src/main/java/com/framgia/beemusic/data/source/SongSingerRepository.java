@@ -38,8 +38,6 @@ public class SongSingerRepository extends DataHelper implements DataSourceRelati
                 null, null, sortOrder);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeDatabse();
         }
         return cursor;
     }
