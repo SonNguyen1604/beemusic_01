@@ -6,6 +6,7 @@ import android.databinding.BindingAdapter;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -50,5 +51,16 @@ public class BindingAdapterUtil {
         searchView.setOnQueryTextListener(onListener);
         ImageView searchIcon = (ImageView) searchView.findViewById(R.id.search_button);
         searchIcon.setImageResource(R.drawable.ic_action_search);
+    }
+
+    @BindingAdapter("layoutManager")
+    public static void setLayoutManager(RecyclerView view,
+                                        LayoutManager.LayoutManagerFactory factory) {
+        view.setLayoutManager(factory.create(view));
+    }
+
+    @BindingAdapter("adapter")
+    public static void setAdapter(RecyclerView view, RecyclerView.Adapter adapter) {
+        view.setAdapter(adapter);
     }
 }
