@@ -62,7 +62,6 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
             cursor = mDatabase
                 .query(AlbumSourceContract.AlbumEntry.TABLE_ALBUM_NAME, null, selection, args,
                     null, null, sortOrder);
-            closeDatabse();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,7 +138,7 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
         String selection = AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
         Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
         boolean isExist = cursor != null && cursor.getCount() > 0;
-        cursor.close();
+        closeCursor(cursor);
         return isExist;
     }
 

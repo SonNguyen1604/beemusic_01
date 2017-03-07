@@ -62,7 +62,6 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
                 .query(SingerSourceContract.SingerEntry.TABLE_SINGER_NAME, null, selection,
                     args,
                     null, null, sortOrder);
-            closeDatabse();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -139,7 +138,7 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
         String selection = SingerSourceContract.SingerEntry.COLUMN_ID_SINGER + " = ?";
         Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
         boolean isExist = cursor != null && cursor.getCount() > 0;
-        cursor.close();
+        closeCursor(cursor);
         return isExist;
     }
 

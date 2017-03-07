@@ -38,8 +38,6 @@ public class SongAlbumRepository extends DataHelper implements DataSourceRelatio
                 null, null, sortOrder);
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            closeDatabse();
         }
         return cursor;
     }
