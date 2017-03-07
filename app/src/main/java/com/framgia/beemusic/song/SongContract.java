@@ -1,5 +1,6 @@
 package com.framgia.beemusic.song;
 
+import com.framgia.beemusic.BasePresenter;
 import com.framgia.beemusic.BaseView;
 
 /**
@@ -9,6 +10,6 @@ public interface SongContract {
     interface View extends BaseView<SongContract.Presenter> {
     }
 
-    interface Presenter {
+    interface Presenter extends BasePresenter {
     }
 }
