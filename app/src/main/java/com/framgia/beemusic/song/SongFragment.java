@@ -52,8 +52,15 @@ public class SongFragment extends Fragment implements SongContract.View {
 
     @Override
     public void initRecycleview(List<Song> songs, List<String> singer) {
-        mAdapter = new SongAdapter(songs, singer);
+        mAdapter = new SongAdapter(songs, singer, mPresenter);
         mBinding.setAdapter(mAdapter);
+    }
+
+    @Override
+    public void notifyItemRemove(int pos) {
+        mAdapter.getSingerList().remove(pos);
+        mAdapter.getSongList().remove(pos);
+        mAdapter.notifyItemRemoved(pos);
     }
 
     @Override

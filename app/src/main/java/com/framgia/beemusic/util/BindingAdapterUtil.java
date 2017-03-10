@@ -19,6 +19,8 @@ import com.framgia.beemusic.R;
  * Created by beepi on 27/02/2017.
  */
 public class BindingAdapterUtil {
+    private static int VERTICAL_ITEM_SPACE = 30;
+
     @BindingAdapter({"toolbar", "activity"})
     public static void setUpDrawerListener(final DrawerLayout drawlayout, Toolbar toolbar,
                                            final AppCompatActivity appCompatActivity) {
@@ -57,10 +59,12 @@ public class BindingAdapterUtil {
     public static void setLayoutManager(RecyclerView view,
                                         LayoutManager.LayoutManagerFactory factory) {
         view.setLayoutManager(factory.create(view));
+        view.addItemDecoration(new VerticalSpaceItemDecoration(VERTICAL_ITEM_SPACE));
     }
 
     @BindingAdapter("adapter")
     public static void setAdapter(RecyclerView view, RecyclerView.Adapter adapter) {
+        if (adapter == null) return;
         view.setAdapter(adapter);
     }
 }

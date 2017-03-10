@@ -1,4 +1,5 @@
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -10,39 +11,84 @@
             name="singer"
             type="String"/>
 
+        <variable
+            name="position"
+            type="int"/>
+
+        <variable
+            name="presenter"
+            type="com.framgia.beemusic.song.SongContract.Presenter"/>
+
     </data>
 
-    <LinearLayout
+    <ru.rambler.libs.swipe_layout.SwipeLayout
+        android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/selected_row"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
-        android:orientation="vertical">
+        android:onClick="@{()->presenter.onOpenPlayMusic(song)}">
 
-        <TextView
-            android:id="@+id/text_name"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_marginTop="5dp"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:paddingLeft="@dimen/dp_5"
-            android:text="@{song.name}"
-            android:textColor="@color/color_teal_900"
-            android:textStyle="italic"/>
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/dp_5">
 
-        <TextView
-            android:id="@+id/textview_artist"
-            android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/dp_5"
-            android:layout_weight="1"
-            android:ellipsize="end"
-            android:paddingLeft="@dimen/dp_5"
-            android:text="@{singer}"
-            android:textColor="@color/color_red_500"/>
-    </LinearLayout>
+            <TextView
+                android:id="@+id/text_name"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginTop="5dp"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:text="@{song.name}"
+                android:textColor="@color/color_teal_900"
+                android:textStyle="italic"/>
 
+            <TextView
+                android:id="@+id/textview_artist"
+                android:layout_width="fill_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/dp_5"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:text="@{singer}"
+                android:textColor="@color/color_red_500"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linear_right_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center|end"
+            android:orientation="horizontal"
+            android:paddingRight="@dimen/dp_20"
+            app:clamp="parent"
+            app:gravity="right">
+
+            <ImageView
+                android:id="@+id/image_view_delete"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{()->presenter.onDeleteSong(song,position)}"
+                android:paddingRight="@dimen/dp_50"
+                android:src="@drawable/ic_delete"/>
+
+            <ImageView
+                android:id="@+id/image_view_album"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingRight="@dimen/dp_50"
+                android:src="@drawable/ic_music_album"/>
+
+            <ImageView
+                android:id="@+id/image_view_favarite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_is_non_favorite"/>
+        </LinearLayout>
+    </ru.rambler.libs.swipe_layout.SwipeLayout>
 </layout>
