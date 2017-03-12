@@ -12,10 +12,10 @@ import rx.Observable;
 public interface DataSource<T> {
     List<T> getModel(String selection, String[] args);
     Cursor getCursor(String selection, String[] args);
+    T getModel(int id);
     int save(T model);
     int update(T model);
     int delete(int id);
     void deleteAlls();
-    boolean checkExistModel(int id);
     Observable<T> getDataObservableByModels(List<T> models);
 }

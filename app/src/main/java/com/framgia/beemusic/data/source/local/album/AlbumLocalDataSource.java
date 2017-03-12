@@ -69,10 +69,29 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
     }
 
     @Override
+    public Album getModel(int id) {
+        String selection = AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
+        Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
+        if (cursor == null || cursor.getCount() < 0) return null;
+        cursor.moveToNext();
+        Album album = new Album(cursor);
+        closeCursor(cursor);
+        closeDatabse();
+        return album;
+    }
+
+    @Override
     public int save(Album model) {
         int count = -1;
         try {
             openDatabase();
+            int id = model.getId();
+            if (checkExistModel(id)) {
+                model = getModel(id);
+                model.setCount(model.getCount() + 1);
+                update(model);
+                return model.getId();
+            }
             ContentValues contentValues = convertFromAlbum(model);
             if (contentValues == null) return -1;
             count = (int) mDatabase
@@ -92,7 +111,6 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
             ContentValues contentValues = convertFromAlbum(model);
             if (contentValues == null) return count;
             openDatabase();
-            mDatabase.beginTransaction();
             count = mDatabase.update(AlbumSourceContract.AlbumEntry.TABLE_ALBUM_NAME, contentValues,
                 AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?",
                 new String[]{String.valueOf(model.getId())});
@@ -132,8 +150,7 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
         }
     }
 
-    @Override
-    public boolean checkExistModel(int id) {
+    private boolean checkExistModel(int id) {
         if (id == -1) return false;
         String selection = AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
         Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
@@ -154,9 +171,9 @@ public class AlbumLocalDataSource extends DataHelper implements DataSource<Album
     private ContentValues convertFromAlbum(Album album) {
         if (album == null) return null;
         ContentValues contentValues = new ContentValues();
+        contentValues.put(AlbumSourceContract.AlbumEntry.COLUMN_COUNT, album.getCount());
         contentValues.put(AlbumSourceContract.AlbumEntry.COLUMN_NAME, album.getName());
         contentValues.put(AlbumSourceContract.AlbumEntry.COLUMN_IMAGE_LINK, album.getImageLink());
-        contentValues.put(AlbumSourceContract.AlbumEntry.COLUMN_COUNT, album.getCount());
         if (album.getId() > -1) {
             contentValues.put(AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM, album.getId());
         }

@@ -72,8 +72,24 @@ public class SongLocalDataSource extends DataHelper implements DataSource<Song> 
     }
 
     @Override
+    public Song getModel(int id) {
+        String selection = SongSourceContract.SongEntry.COLUMN_ID_SONG + " = ?";
+        Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
+        if (cursor == null || cursor.getCount() < 0) return null;
+        cursor.moveToNext();
+        Song song = new Song(cursor);
+        closeCursor(cursor);
+        closeDatabse();
+        return song;
+    }
+
+    @Override
     public int save(Song song) {
         int count = -1;
+        if (checkExistModel(song.getId())) {
+            update(song);
+            return song.getId();
+        }
         try {
             openDatabase();
             ContentValues contentValues = convertContentValueFromSong(song);
@@ -89,16 +105,16 @@ public class SongLocalDataSource extends DataHelper implements DataSource<Song> 
     }
 
     @Override
-    public int update(Song song) {
+    public int update(Song model) {
         int count = -1;
         try {
-            ContentValues contentValues = convertContentValueFromSong(song);
+            ContentValues contentValues = convertContentValueFromSong(model);
             if (contentValues == null) return count;
             openDatabase();
             mDatabase.beginTransaction();
             count = mDatabase.update(SongSourceContract.SongEntry.TABLE_SONG_NAME, contentValues,
                 SongSourceContract.SongEntry.COLUMN_ID_SONG + " = ?",
-                new String[]{String.valueOf(song.getId())});
+                new String[]{String.valueOf(model.getId())});
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -135,8 +151,7 @@ public class SongLocalDataSource extends DataHelper implements DataSource<Song> 
         }
     }
 
-    @Override
-    public boolean checkExistModel(int id) {
+    private boolean checkExistModel(int id) {
         if (id == -1) return false;
         String selection = SongSourceContract.SongEntry.COLUMN_ID_SONG + " = ?";
         Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});

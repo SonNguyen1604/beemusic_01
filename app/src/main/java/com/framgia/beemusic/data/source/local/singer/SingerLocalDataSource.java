@@ -69,10 +69,28 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
     }
 
     @Override
+    public Singer getModel(int id) {
+        String selection = SingerSourceContract.SingerEntry.COLUMN_ID_SINGER + " = ?";
+        Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
+        if (cursor == null || cursor.getCount() < 0) return null;
+        cursor.moveToNext();
+        Singer singer = new Singer(cursor);
+        closeCursor(cursor);
+        closeDatabse();
+        return singer;
+    }
+
+    @Override
     public int save(Singer model) {
         int count = -1;
         try {
             openDatabase();
+            String name = model.getName();
+            if (checkExistModel(model.getName())) {
+                model = getModel(name);
+                model.setCount(model.getCount() + 1);
+                return model.getId();
+            }
             ContentValues contentValues = convertFromSinger(model);
             if (contentValues == null) return -1;
             count = (int) mDatabase
@@ -132,11 +150,10 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
         }
     }
 
-    @Override
-    public boolean checkExistModel(int id) {
-        if (id == -1) return false;
-        String selection = SingerSourceContract.SingerEntry.COLUMN_ID_SINGER + " = ?";
-        Cursor cursor = getCursor(selection, new String[]{String.valueOf(id)});
+    private boolean checkExistModel(String name) {
+        if (name == null) return false;
+        String selection = SingerSourceContract.SingerEntry.COLUMN_NAME + " = ?";
+        Cursor cursor = getCursor(selection, new String[]{String.valueOf(name)});
         boolean isExist = cursor != null && cursor.getCount() > 0;
         closeCursor(cursor);
         return isExist;
@@ -154,10 +171,22 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
     private ContentValues convertFromSinger(Singer singer) {
         if (singer == null) return null;
         ContentValues contentValues = new ContentValues();
+        contentValues.put(SingerSourceContract.SingerEntry.COLUMN_COUNT, singer.getCount());
         contentValues.put(SingerSourceContract.SingerEntry.COLUMN_NAME, singer.getName());
         if (singer.getId() > -1) {
             contentValues.put(SingerSourceContract.SingerEntry.COLUMN_ID_SINGER, singer.getId());
         }
         return contentValues;
+    }
+
+    private Singer getModel(String name) {
+        String selection = SingerSourceContract.SingerEntry.COLUMN_NAME + " = ?";
+        Cursor cursor = getCursor(selection, new String[]{name});
+        if (cursor == null || cursor.getCount() < 0) return null;
+        cursor.moveToNext();
+        Singer singer = new Singer(cursor);
+        closeCursor(cursor);
+        closeDatabse();
+        return singer;
     }
 }

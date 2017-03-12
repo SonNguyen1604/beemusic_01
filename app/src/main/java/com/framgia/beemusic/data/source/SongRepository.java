@@ -39,14 +39,18 @@ public class SongRepository implements DataSource<Song> {
     }
 
     @Override
+    public Song getModel(int id) {
+        return mLocalHandler.getModel(id);
+    }
+
+    @Override
     public int save(Song song) {
-        if (checkExistModel(song.getId())) return update(song);
         return mLocalHandler.save(song);
     }
 
     @Override
-    public int update(Song song) {
-        return mLocalHandler.update(song);
+    public int update(Song model) {
+        return mLocalHandler.update(model);
     }
 
     @Override
@@ -57,11 +61,6 @@ public class SongRepository implements DataSource<Song> {
     @Override
     public void deleteAlls() {
         mLocalHandler.deleteAlls();
-    }
-
-    @Override
-    public boolean checkExistModel(int id) {
-        return mLocalHandler.checkExistModel(id);
     }
 
     public Observable<Song> getDataObservableByModels(List<Song> models) {

@@ -5,7 +5,6 @@ import android.database.Cursor;
 
 import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.data.source.local.album.AlbumLocalDataSource;
-import com.framgia.beemusic.data.source.local.album.AlbumSourceContract;
 
 import java.util.List;
 
@@ -36,13 +35,23 @@ public class AlbumRepository implements DataSource<Album> {
 
     @Override
     public int save(Album model) {
-        if (checkExistModel(model.getId())) return update(model);
         return mLocalHandler.save(model);
     }
 
     @Override
     public int update(Album model) {
         return mLocalHandler.update(model);
+    }
+
+    public void updateCountForDelSong(List<Integer> idAlbums) {
+        if (idAlbums == null) return;
+        for (Integer id : idAlbums) {
+            Album album = getModel(id);
+            if (album == null) continue;
+            if (album.getCount() == 0) return;
+            album.setCount(album.getCount() - 1);
+            update(album);
+        }
     }
 
     @Override
@@ -56,11 +65,6 @@ public class AlbumRepository implements DataSource<Album> {
     }
 
     @Override
-    public boolean checkExistModel(int id) {
-        return mLocalHandler.checkExistModel(id);
-    }
-
-    @Override
     public Observable<Album> getDataObservableByModels(List<Album> models) {
         return mLocalHandler.getDataObservableByModels(models);
     }
@@ -70,10 +74,8 @@ public class AlbumRepository implements DataSource<Album> {
         return mLocalHandler.getCursor(selection, args);
     }
 
-    private int getCountSong(int id) {
-        String selection = AlbumSourceContract.AlbumEntry.COLUMN_ID_ALBUM + " = ?";
-        List<Album> albums = getModel(selection, new String[]{String.valueOf(id)});
-        if (albums == null) return -1;
-        return albums.get(0).getCount();
+    @Override
+    public Album getModel(int id) {
+        return mLocalHandler.getModel(id);
     }
 }

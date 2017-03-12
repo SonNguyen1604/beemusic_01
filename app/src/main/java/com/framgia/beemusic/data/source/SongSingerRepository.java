@@ -5,9 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 
 import com.framgia.beemusic.data.source.local.DataHelper;
-import com.framgia.beemusic.data.source.local.singer.SingerSourceContract;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
 import com.framgia.beemusic.data.source.local.songsinger.SongSingerSourceContract;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by beepi on 20/02/2017.
@@ -24,6 +26,25 @@ public class SongSingerRepository extends DataHelper implements DataSourceRelati
             sSongSingerRepository = new SongSingerRepository(context);
         }
         return sSongSingerRepository;
+    }
+
+    @Override
+    public List<Integer> getListId(int idSong) {
+        String selection = SongSingerSourceContract.SongSingerEntry.COLUMN_ID_SONG + " = ?";
+        List<Integer> idSingers = new ArrayList<>();
+        int idSinger;
+        Cursor cursor = getCursor(selection,
+            new String[]{String.valueOf(idSong)});
+        if (cursor == null || cursor.getCount() == 0) return null;
+        while (cursor.moveToNext()) {
+            idSinger = cursor.getInt(cursor.getColumnIndex(
+                SongSingerSourceContract
+                    .SongSingerEntry.COLUMN_ID_SINGER));
+            idSingers.add(idSinger);
+        }
+        closeCursor(cursor);
+        closeDatabse();
+        return idSingers;
     }
 
     @Override
@@ -80,6 +101,12 @@ public class SongSingerRepository extends DataHelper implements DataSourceRelati
     }
 
     @Override
+    public int delete(int idSong) {
+        String selection = SongSingerSourceContract.SongSingerEntry.COLUMN_ID_SONG + " = ?";
+        return delete(selection, new String[]{String.valueOf(idSong)});
+    }
+
+    @Override
     public void deleteAlls() {
         try {
             openDatabase();
@@ -98,8 +125,8 @@ public class SongSingerRepository extends DataHelper implements DataSourceRelati
     private ContentValues createContentValue(int idSong, int idSinger) {
         if (idSinger == -1 && idSong == -1) return null;
         ContentValues contentValues = new ContentValues();
-        contentValues.put(SongSourceContract.SongEntry.COLUMN_ID_SONG, idSong);
-        contentValues.put(SingerSourceContract.SingerEntry.COLUMN_ID_SINGER, idSinger);
+        contentValues.put(SongSingerSourceContract.SongSingerEntry.COLUMN_ID_SONG, idSong);
+        contentValues.put(SongSingerSourceContract.SongSingerEntry.COLUMN_ID_SINGER, idSinger);
         return contentValues;
     }
 }
