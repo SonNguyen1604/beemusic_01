@@ -3,6 +3,7 @@ package com.framgia.beemusic.song;
 import android.databinding.ObservableArrayList;
 import android.support.annotation.NonNull;
 
+import com.framgia.beemusic.BeeApplication;
 import com.framgia.beemusic.data.model.Song;
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
@@ -10,6 +11,7 @@ import com.framgia.beemusic.data.source.SongAlbumRepository;
 import com.framgia.beemusic.data.source.SongRepository;
 import com.framgia.beemusic.data.source.SongSingerRepository;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
+import com.framgia.beemusic.displaysong.DisplaySong;
 
 import ru.rambler.libs.swipe_layout.SwipeLayout;
 import rx.Observable;
@@ -114,8 +116,8 @@ public class SongPresenter implements SongContract.Presenter {
     }
 
     @Override
-    public void onOpenPlayMusic(Song song) {
-        // todo open play music
+    public void onOpenPlayMusic(Song song, String singer) {
+        BeeApplication.getInstant().startActivity(DisplaySong.getIntent(song, singer));
     }
 
     @Override

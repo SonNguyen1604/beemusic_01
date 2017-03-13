@@ -15,15 +15,12 @@
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{()->bindingModel.bindPresenter.onOpenPlayMusic(bindingModel.song)}">
+        android:onClick="@{()->bindingModel.bindPresenter.onOpenPlayMusic(bindingModel.song,bindingModel.singer)}">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/selected_row"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
+            android:onClick="@{()->bindingModel.bindPresenter.onOpenPlayMusic(bindingModel.song,bindingModel.singer)}"
             android:orientation="vertical"
             android:paddingLeft="@dimen/dp_5">
 
@@ -53,7 +50,7 @@
             android:id="@+id/linear_right_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/color_teal_100"
+            android:background="@color/color_white"
             android:gravity="center|end"
             android:orientation="horizontal"
             android:paddingRight="@dimen/dp_20"

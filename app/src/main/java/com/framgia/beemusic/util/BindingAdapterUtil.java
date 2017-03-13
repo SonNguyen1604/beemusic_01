@@ -11,8 +11,11 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
+import com.framgia.beemusic.BeeApplication;
 import com.framgia.beemusic.R;
 import com.framgia.beemusic.main.MainActivity;
 
@@ -20,7 +23,7 @@ import com.framgia.beemusic.main.MainActivity;
  * Created by beepi on 27/02/2017.
  */
 public class BindingAdapterUtil {
-    private static int VERTICAL_ITEM_SPACE = 30;
+    private static int VERTICAL_ITEM_SPACE = 20;
 
     @BindingAdapter({"toolbar", "activity"})
     public static void setUpDrawerListener(final DrawerLayout drawlayout, Toolbar toolbar,
@@ -77,5 +80,28 @@ public class BindingAdapterUtil {
     public static void setAdapter(RecyclerView view, RecyclerView.Adapter adapter) {
         if (adapter == null) return;
         view.setAdapter(adapter);
+    }
+
+    @BindingAdapter({"title", "color"})
+    public static void setPlaySongActionBar(Toolbar toolbar, String title, int color) {
+        toolbar.inflateMenu(R.menu.toolbar_display_song);
+        toolbar.setTitle(title);
+        toolbar.setTitleTextColor(color);
+        MenuItem menuItem = toolbar.getMenu().findItem(R.id.action_remove);
+        if (menuItem == null) return;
+        menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                // todo remove activiy display song
+                return true;
+            }
+        });
+    }
+
+    @BindingAdapter("rotate")
+    public static void setAnimation(ImageView imageView, int typeAnimation) {
+        Animation animation =
+            AnimationUtils.loadAnimation(BeeApplication.getInstant(), typeAnimation);
+        imageView.startAnimation(animation);
     }
 }

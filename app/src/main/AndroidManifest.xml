@@ -24,5 +24,7 @@
                 android:resource="@xml/searchable"/>
         </activity>
         <service android:name=".service.ObservableService"/>
+        <activity android:name=".displaysong.DisplaySong"/>
     </application>
+
 </manifest>
