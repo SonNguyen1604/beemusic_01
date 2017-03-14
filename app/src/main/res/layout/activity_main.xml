@@ -5,9 +5,23 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
             name="mainActivity"
             type="com.framgia.beemusic.main.MainActivity"/>
+
+        <variable
+            name="rotate"
+            type="Integer"/>
+
+        <variable
+            name="song"
+            type="com.framgia.beemusic.data.model.Song"/>
+
+        <variable
+            name="singer"
+            type="String"/>
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -41,6 +55,12 @@
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:orientation="vertical"/>
+
+            <include
+                layout="@layout/bottom_bar"
+                bind:rotate="@{rotate}"
+                bind:singer="@{singer}"
+                bind:song="@{song}"/>
         </LinearLayout>
 
         <android.support.design.widget.NavigationView

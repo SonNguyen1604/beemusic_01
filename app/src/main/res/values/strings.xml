@@ -17,4 +17,5 @@
     <string name="msg_close_drawer">close</string>
     <string name="title_search">search</string>
     <string name="search_hint">search...</string>
+    <string name="action_remove">remove</string>
 </resources>

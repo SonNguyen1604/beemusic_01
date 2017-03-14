@@ -51,6 +51,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mBinding.setMainActivity(this);
+        mBinding.setRotate(R.anim.rotation);
         mBinding.navigationView.setNavigationItemSelectedListener(this);
         initPresenter();
         checkAndRequestPermission();

@@ -22,7 +22,7 @@ public interface SongContract {
         void onAddToAlbum(Song song, SwipeLayout layout);
         void onAddToFavorite(Song song, SwipeLayout layout);
         void onRemoveFromFavorite(Song song, SwipeLayout layout);
-        void onOpenPlayMusic(Song song);
         void subcribeFavorite(Song song);
+        void onOpenPlayMusic(Song song, String singer);
     }
 }

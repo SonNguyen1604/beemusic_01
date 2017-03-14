@@ -11,4 +11,10 @@
     <dimen name="sp_6">6pt</dimen>
     <dimen name="dp_50">50dp</dimen>
     <dimen name="dp_40">40dp</dimen>
+    <dimen name="dp_160">160dp</dimen>
+    <dimen name="dp_45">45dp</dimen>
+    <dimen name="dp_8">8dp</dimen>
+    <dimen name="dp_25">25dp</dimen>
+    <dimen name="dp_7">7dp</dimen>
+    <dimen name="dp_30">30dp</dimen>
 </resources>

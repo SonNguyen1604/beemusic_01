@@ -7,10 +7,12 @@ import android.databinding.Bindable;
 import com.android.databinding.library.baseAdapters.BR;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
 
+import java.io.Serializable;
+
 /**
  * Created by beepi on 17/02/2017.
  */
-public class Song extends BaseObservable {
+public class Song extends BaseObservable implements Serializable {
     public static boolean IS_FAVORITE = true;
     public static boolean IS_NON_FAVORITE = false;
     public static int TYPE_MEDIA = 0;
