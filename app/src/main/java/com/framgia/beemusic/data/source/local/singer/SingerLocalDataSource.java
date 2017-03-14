@@ -80,6 +80,17 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
         return singer;
     }
 
+    private Singer getModel(String name) {
+        String selection = SingerSourceContract.SingerEntry.COLUMN_NAME + " = ?";
+        Cursor cursor = getCursor(selection, new String[]{name});
+        if (cursor == null || cursor.getCount() < 0) return null;
+        cursor.moveToNext();
+        Singer singer = new Singer(cursor);
+        closeCursor(cursor);
+        closeDatabse();
+        return singer;
+    }
+
     @Override
     public int save(Singer model) {
         int count = -1;
@@ -89,6 +100,7 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
             if (checkExistModel(model.getName())) {
                 model = getModel(name);
                 model.setCount(model.getCount() + 1);
+                update(model);
                 return model.getId();
             }
             ContentValues contentValues = convertFromSinger(model);
@@ -177,16 +189,5 @@ public class SingerLocalDataSource extends DataHelper implements DataSource<Sing
             contentValues.put(SingerSourceContract.SingerEntry.COLUMN_ID_SINGER, singer.getId());
         }
         return contentValues;
-    }
-
-    private Singer getModel(String name) {
-        String selection = SingerSourceContract.SingerEntry.COLUMN_NAME + " = ?";
-        Cursor cursor = getCursor(selection, new String[]{name});
-        if (cursor == null || cursor.getCount() < 0) return null;
-        cursor.moveToNext();
-        Singer singer = new Singer(cursor);
-        closeCursor(cursor);
-        closeDatabse();
-        return singer;
     }
 }

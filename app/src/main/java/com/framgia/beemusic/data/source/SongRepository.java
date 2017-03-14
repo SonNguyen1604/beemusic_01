@@ -6,6 +6,7 @@ import android.database.Cursor;
 import com.framgia.beemusic.data.model.Song;
 import com.framgia.beemusic.data.source.local.song.SongLocalDataSource;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.Observable;
@@ -65,5 +66,16 @@ public class SongRepository implements DataSource<Song> {
 
     public Observable<Song> getDataObservableByModels(List<Song> models) {
         return mLocalHandler.getDataObservableByModels(models);
+    }
+
+    public List<Song> getModel(Cursor cursor) {
+        if (cursor == null || cursor.getCount() == 0) return null;
+        List<Song> songs = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            Song song = new Song(cursor);
+            songs.add(song);
+        }
+        cursor.close();
+        return songs;
     }
 }

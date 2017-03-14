@@ -11,6 +11,7 @@ import com.framgia.beemusic.data.model.Singer;
 import com.framgia.beemusic.data.model.Song;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
 
+import java.util.List;
 import java.util.concurrent.Callable;
 
 import rx.Observable;
@@ -132,9 +133,10 @@ public class SynchronizeRepository implements SynchronizeContract {
     public void synchronizeByDelModel(Cursor delCursor) {
         int idSong;
         if (delCursor == null || delCursor.getCount() == 0) return;
-        while (delCursor.moveToNext()) {
-            idSong = delCursor.getInt(delCursor.getColumnIndex(SongSourceContract.SongEntry
-                .COLUMN_ID_SONG));
+        List<Song> delSongs = mSongHandler.getModel(delCursor);
+        if (delSongs == null) return;
+        for (Song song : delSongs) {
+            idSong = song.getId();
             mSongHandler.delete(idSong);
             mAlbumHandler.updateCountForDelSong(mSongAlbumHandler.getListId(idSong));
             mSingerHandler.updateCountByDelSong(mSongSingerHandler.getListId(idSong));
@@ -176,9 +178,9 @@ public class SynchronizeRepository implements SynchronizeContract {
         allSong = allSong.substring(0, allSong.length() - 1);
         appCursor.close();
         String selection = MediaStore.Audio.Media._ID + " NOT IN ("
-            + allSong + ")";
-        return mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-            new String[]{MediaStore.Audio.Media._ID}, selection, null, sortOrder);
+            + allSong + ") and " + MediaStore.Audio.Media.IS_MUSIC + " = ?";
+        return mContentResolver.query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, null, selection,
+            new String[]{String.valueOf(1)}, sortOrder);
     }
 }
 
