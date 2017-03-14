@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 
 import com.framgia.beemusic.R;
+import com.framgia.beemusic.main.MainActivity;
 
 /**
  * Created by beepi on 27/02/2017.
@@ -32,27 +33,37 @@ public class BindingAdapterUtil {
         actionBarDrawerToggle.syncState();
     }
 
-    @BindingAdapter({"title", "color", "onListener", "activity"})
+    @BindingAdapter({"title", "color", "activity"})
     public static void setSupportActionBar(Toolbar toolbar, String title, int color,
-                                           SearchView.OnQueryTextListener onListener,
-                                           AppCompatActivity activity) {
+                                           MainActivity activity) {
         toolbar.inflateMenu(R.menu.toolbar_main);
         toolbar.setTitle(title);
         toolbar.setTitleTextColor(color);
-        initSearchView(toolbar.getMenu(), onListener, activity);
+        initSearchView(toolbar.getMenu(), activity);
     }
 
-    private static void initSearchView(Menu menu, SearchView.OnQueryTextListener onListener,
-                                       AppCompatActivity activity) {
+    private static void initSearchView(Menu menu, final MainActivity activity) {
         MenuItem itemSearch = menu.findItem(R.id.action_search);
         SearchView searchView = (SearchView) itemSearch.getActionView();
         SearchManager searchManager =
             (SearchManager) activity.getSystemService(Context.SEARCH_SERVICE);
         searchView.setSearchableInfo(
             searchManager.getSearchableInfo(activity.getComponentName()));
-        searchView.setOnQueryTextListener(onListener);
         ImageView searchIcon = (ImageView) searchView.findViewById(R.id.search_button);
         searchIcon.setImageResource(R.drawable.ic_action_search);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                activity.onSearch(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                activity.onSearch(newText);
+                return true;
+            }
+        });
     }
 
     @BindingAdapter("layoutManager")

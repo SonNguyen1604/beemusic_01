@@ -7,7 +7,7 @@
 
         <variable
             name="mainActivity"
-            type="com.framgia.beemusic.main.MainActivity"></variable>
+            type="com.framgia.beemusic.main.MainActivity"/>
     </data>
 
     <android.support.v4.widget.DrawerLayout
@@ -33,7 +33,6 @@
                 app:theme="@style/SearchView"
                 bind:activity="@{mainActivity}"
                 bind:color="@{@color/color_white}"
-                bind:onListener="@{mainActivity}"
                 bind:title="@{@string/app_name}"/>
 
             <LinearLayout

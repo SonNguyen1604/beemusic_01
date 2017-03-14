@@ -46,6 +46,7 @@ public class MainPresenter implements MainContract.Presenter {
                 @Override
                 public void onCompleted() {
                     mView.startObserverService();
+                    mView.initSongFragment();
                 }
 
                 @Override

@@ -3,21 +3,11 @@
 
     <data>
 
-        <variable
-            name="song"
-            type="com.framgia.beemusic.data.model.Song"/>
+        <import type="android.view.View"/>
 
         <variable
-            name="singer"
-            type="String"/>
-
-        <variable
-            name="position"
-            type="int"/>
-
-        <variable
-            name="presenter"
-            type="com.framgia.beemusic.song.SongContract.Presenter"/>
+            name="bindingModel"
+            type="com.framgia.beemusic.song.SongAdapter.SongViewHolder.BindingModel"/>
 
     </data>
 
@@ -25,7 +15,7 @@
         android:id="@+id/swipe_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="@{()->presenter.onOpenPlayMusic(song)}">
+        android:onClick="@{()->bindingModel.bindPresenter.onOpenPlayMusic(bindingModel.song)}">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -44,7 +34,7 @@
                 android:layout_marginTop="5dp"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:text="@{song.name}"
+                android:text="@{bindingModel.song.name}"
                 android:textColor="@color/color_teal_900"
                 android:textStyle="italic"/>
 
@@ -55,7 +45,7 @@
                 android:layout_marginBottom="@dimen/dp_5"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:text="@{singer}"
+                android:text="@{bindingModel.singer}"
                 android:textColor="@color/color_red_500"/>
         </LinearLayout>
 
@@ -74,7 +64,7 @@
                 android:id="@+id/image_view_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{()->presenter.onDeleteSong(song,position)}"
+                android:onClick="@{()->bindingModel.bindPresenter.onDeleteSong(bindingModel.song,bindingModel.position)}"
                 android:paddingRight="@dimen/dp_50"
                 android:src="@drawable/ic_delete"/>
 
@@ -82,14 +72,25 @@
                 android:id="@+id/image_view_album"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:onClick="@{()->bindingModel.bindPresenter.onAddToAlbum(bindingModel.song,swipeLayout)}"
                 android:paddingRight="@dimen/dp_50"
                 android:src="@drawable/ic_music_album"/>
 
             <ImageView
-                android:id="@+id/image_view_favarite"
+                android:id="@+id/image_view_non_favarite"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:src="@drawable/ic_is_non_favorite"/>
+                android:onClick="@{()->bindingModel.bindPresenter.onAddToFavorite(bindingModel.song,swipeLayout)}"
+                android:src="@drawable/ic_is_non_favorite"
+                android:visibility="@{bindingModel.song.isFavorite ? View.GONE : View.VISIBLE}"/>
+
+            <ImageView
+                android:id="@+id/image_view_favorite"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="@{()->bindingModel.bindPresenter.onRemoveFromFavorite(bindingModel.song,swipeLayout)}"
+                android:src="@drawable/ic_is_favorite"
+                android:visibility="@{bindingModel.song.isFavorite ? View.VISIBLE : View.GONE}"/>
         </LinearLayout>
     </ru.rambler.libs.swipe_layout.SwipeLayout>
 </layout>
