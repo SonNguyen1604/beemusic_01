@@ -26,7 +26,11 @@ import com.framgia.beemusic.data.source.SongSingerRepository;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
 import com.framgia.beemusic.main.MainActivity;
 
+import java.util.Collections;
 import java.util.List;
+
+import static com.framgia.beemusic.service.MusicService.RepeatType.OFF;
+import static com.framgia.beemusic.service.MusicService.RepeatType.ONE;
 
 /**
  * Created by beepi on 15/03/2017.
@@ -41,11 +45,19 @@ public class MusicService extends Service
     private static final int NOTIFICATION_ID = 1;
     private static final int RUNTIME_DELAY = 1000;
 
-    public static enum TYPE_PLAY {
-        REPEAT,
-        SHUFFLE
+    public enum RepeatType {
+        ALL,
+        ONE,
+        OFF
     }
 
+    public enum ShuffleType {
+        ON,
+        OFF
+    }
+
+    private ShuffleType mTypeShuffle;
+    private RepeatType mTypeRepeat;
     private final IBinder mBinder = new MusicBinder();
     private Song mSong;
     private int mIdAlbum = -1;
@@ -60,7 +72,6 @@ public class MusicService extends Service
     private SongAlbumRepository mSongAlbumRepository;
     private SongSingerRepository mSongSingerRepository;
     private SingerRepository mSingerRepository;
-    private TYPE_PLAY mTypePlay;
     private boolean mIsPlaying;
 
     public void setListenerDetailMusic(ListenerDetailMusic listenerDetailMusic) {
@@ -94,10 +105,10 @@ public class MusicService extends Service
                 onPause();
                 break;
             case ACTION_NEXT:
-                onPlayNext();
+                onPlayNextRepeat();
                 break;
             case ACTION_PREVIOUS:
-                onPlayPrevious();
+                onPlayPreviousRepeat();
                 break;
             default:
                 break;
@@ -123,11 +134,16 @@ public class MusicService extends Service
     @Override
     public void onPrepared(MediaPlayer mediaPlayer) {
         mMediaPlayer.start();
+        if ((mPosSong == mSongs.size()) && mTypeRepeat == OFF) {
+            mPosSong--;
+            onPause();
+            mMediaPlayer.seekTo(mSong.getDuration());
+        }
         setUpAsForeground();
         updateSeekbar();
         mIsPlaying = true;
         mListenerDetailMusic.updateDuration(mSong.getDuration());
-        mListenerDetailMusic.updateDetailMusic(mSong, mSinger);
+        mListenerDetailMusic.updateDetailMusic();
     }
 
     public void updateSeekbar() {
@@ -138,10 +154,26 @@ public class MusicService extends Service
     private Runnable mUpdateSeekbarRunable = new Runnable() {
         @Override
         public void run() {
-            mListenerDetailMusic.updateSeekBar(getCurrentPos());
+            mListenerDetailMusic.updateSeekBar(mMediaPlayer.getCurrentPosition());
             updateSeekbar();
         }
     };
+
+    public ShuffleType getTypeShuffle() {
+        return mTypeShuffle;
+    }
+
+    public void setTypeShuffle(ShuffleType shuffle) {
+        mTypeShuffle = shuffle;
+    }
+
+    public RepeatType getTypeRepeat() {
+        return mTypeRepeat;
+    }
+
+    public void setTypeRepeat(RepeatType typeRepeat) {
+        mTypeRepeat = typeRepeat;
+    }
 
     private void initModel() {
         String selection;
@@ -178,7 +210,8 @@ public class MusicService extends Service
         mSongAlbumRepository = SongAlbumRepository.getInstant(BeeApplication.getInstant());
         mSongSingerRepository = SongSingerRepository.getInstant(BeeApplication.getInstant());
         mSingerRepository = SingerRepository.getInstant(BeeApplication.getInstant());
-        setTypePlay(TYPE_PLAY.SHUFFLE);
+        mTypeRepeat = OFF;
+        mTypeShuffle = ShuffleType.OFF;
         initMediaPlayer();
     }
 
@@ -196,16 +229,55 @@ public class MusicService extends Service
     public void onCompletion(MediaPlayer mediaPlayer) {
         if (mediaPlayer.getCurrentPosition() <= 0) return;
         mediaPlayer.reset();
-        switch (mTypePlay) {
-            case SHUFFLE:
-                onPlayNext();
+        playRepeatType(mTypeRepeat);
+    }
+
+    public void shuffleListSong() {
+        if (mSongs == null) return;
+        Collections.shuffle(mSongs);
+    }
+
+    private void playRepeatType(RepeatType type) {
+        switch (type) {
+            case ALL:
+                onPlayNextRepeat();
                 break;
-            case REPEAT:
+            case ONE:
                 onPlay();
+                break;
+            case OFF:
+                onPlayNextNonRepeat();
                 break;
             default:
                 break;
         }
+    }
+
+    public void onPlayNextNonRepeat() {
+        if (mSongs == null) initModel();
+        mPosSong++;
+        if (mPosSong == mSongs.size()) {
+            mMediaPlayer.reset();
+            try {
+                mMediaPlayer.setDataSource(mSong.getLink());
+                mMediaPlayer.prepareAsync();
+            } catch (IllegalArgumentException e) {
+                e.printStackTrace();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            return;
+        }
+        mSong = mSongs.get(mPosSong);
+        if (mIdSinger != -1) {
+            onPlay();
+            return;
+        }
+        List<Integer> ids = mSongSingerRepository.getListId(mSong.getId());
+        if (ids == null) return;
+        mSinger = mSingerRepository.getModel(ids.get(0)).getName();
+        onPlay();
+        sendBroadcast(new Intent(ACTION_NEXT));
     }
 
     @Override
@@ -217,7 +289,7 @@ public class MusicService extends Service
     }
 
     public void onPlay() {
-        initModel();
+        if (mTypeRepeat != ONE) initModel();
         mMediaPlayer.reset();
         try {
             mMediaPlayer.setDataSource(mSong.getLink());
@@ -230,7 +302,8 @@ public class MusicService extends Service
     }
 
     public void onResume() {
-        mMediaPlayer.seekTo(getCurrentPos());
+        mMediaPlayer.seekTo(mMediaPlayer.getCurrentPosition() == mSong.getDuration() ?
+            0 : mMediaPlayer.getCurrentPosition());
         mMediaPlayer.start();
         mIsPlaying = true;
         sendBroadcast(new Intent(ACTION_RESUME));
@@ -247,7 +320,7 @@ public class MusicService extends Service
         stopForeground(false);
     }
 
-    public void onPlayNext() {
+    public void onPlayNextRepeat() {
         if (mSongs == null) initModel();
         mPosSong++;
         if (mPosSong == mSongs.size()) mPosSong = 0;
@@ -263,7 +336,7 @@ public class MusicService extends Service
         sendBroadcast(new Intent(ACTION_NEXT));
     }
 
-    public void onPlayPrevious() {
+    public void onPlayPreviousRepeat() {
         if (mSongs == null) initModel();
         mPosSong--;
         if (mPosSong < 0) mPosSong = mSongs.size() - 1;
@@ -283,24 +356,12 @@ public class MusicService extends Service
         mMediaPlayer.seekTo(pos);
     }
 
-    public int getCurrentPos() {
-        return mMediaPlayer.getCurrentPosition();
-    }
-
     private void setUpAsForeground() {
         startForeground(NOTIFICATION_ID, notifyNotification(R.drawable.ic_pause, ACTION_PAUSE));
     }
 
     public boolean isPlaying() {
         return mIsPlaying;
-    }
-
-    public TYPE_PLAY getTypePlay() {
-        return mTypePlay;
-    }
-
-    public void setTypePlay(TYPE_PLAY typePlay) {
-        mTypePlay = typePlay;
     }
 
     public class MusicBinder extends Binder {
@@ -395,6 +456,6 @@ public class MusicService extends Service
     public interface ListenerDetailMusic {
         void updateSeekBar(int pos);
         void updateDuration(int duration);
-        void updateDetailMusic(Song song, String singer);
+        void updateDetailMusic();
     }
 }

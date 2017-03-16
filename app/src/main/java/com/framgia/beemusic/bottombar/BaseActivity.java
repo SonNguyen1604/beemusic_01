@@ -53,8 +53,9 @@ public class BaseActivity extends AppCompatActivity implements MusicReceiver.Lis
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (sService.isPlaying()) sService.onResume();
         unregisterReceiver(mMusicReceiver);
+        if (sService == null || !sService.isPlaying()) return;
+        sService.onResume();
     }
 
     public BindBottomModel getModel() {
@@ -67,12 +68,12 @@ public class BaseActivity extends AppCompatActivity implements MusicReceiver.Lis
 
     public void onPrevious() {
         if (sService == null) return;
-        sService.onPlayPrevious();
+        sService.onPlayPreviousRepeat();
     }
 
     public void onNext() {
         if (sService == null) return;
-        sService.onPlayNext();
+        sService.onPlayNextRepeat();
     }
 
     public void onChangeState(BindBottomModel model) {
@@ -95,12 +96,12 @@ public class BaseActivity extends AppCompatActivity implements MusicReceiver.Lis
     }
 
     @Override
-    public void onPauseMusic() {
+    public void onPauseReceiver() {
         mModel.isStatePause.set(!sService.isPlaying());
     }
 
     @Override
-    public void onPlayMusic() {
+    public void onPlayReceiver() {
         mModel.isStatePause.set(!sService.isPlaying());
     }
 
