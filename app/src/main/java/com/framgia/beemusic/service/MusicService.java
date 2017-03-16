@@ -82,6 +82,7 @@ public class MusicService extends Service
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        if (intent == null) return START_STICKY;
         String action = intent.getAction();
         if (action == null) return START_STICKY;
         switch (action) {
@@ -94,6 +95,7 @@ public class MusicService extends Service
                 onPause();
                 mNotificationManager.notify(NOTIFICATION_ID,
                     notifyNotification(R.drawable.ic_play, ACTION_RESUME));
+                stopForeground(false);
                 break;
             case ACTION_NEXT:
                 onPlayNext();
@@ -308,7 +310,6 @@ public class MusicService extends Service
     }
 
     private Notification notifyNotification(int drawable, String action) {
-
         PendingIntent notifyPendingIntent, nextPendingIntent,
             previousPendingIntent;
         notifyPendingIntent = createPendingIntentService(action);
