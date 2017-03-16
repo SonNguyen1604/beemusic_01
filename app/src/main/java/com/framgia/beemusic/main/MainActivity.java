@@ -13,13 +13,13 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.view.Window;
 import android.widget.Toast;
 
 import com.framgia.beemusic.BaseFragmentView;
 import com.framgia.beemusic.R;
+import com.framgia.beemusic.bottombar.BaseActivity;
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
 import com.framgia.beemusic.data.source.SongAlbumRepository;
@@ -38,21 +38,21 @@ import static com.framgia.beemusic.util.Constant.CONTENT_EMAIL;
 import static com.framgia.beemusic.util.Constant.GMAIL;
 import static com.framgia.beemusic.util.Constant.SUBJECT_EMAIL;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends BaseActivity
     implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
     private MainContract.Presenter mPresenter;
     private static final int WRITE_EXTERNAL_STORAGE_CODE = 1;
     private ActivityMainBinding mBinding;
     private SongFragment mSongFragment;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         super.onCreate(savedInstanceState);
         mBinding = DataBindingUtil.setContentView(this, R.layout.activity_main);
         mBinding.setMainActivity(this);
-        mBinding.setRotate(R.anim.rotation);
         mBinding.navigationView.setNavigationItemSelectedListener(this);
+        mBinding.setBottomModel(getModel());
+        mBinding.setBaseActivity(this);
         initPresenter();
         checkAndRequestPermission();
     }

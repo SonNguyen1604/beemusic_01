@@ -71,12 +71,14 @@ public class SongFragment extends Fragment implements SongContract.FragmentView 
     @Override
     public void onDetach() {
         super.onDetach();
+        if (mPresenter == null) return;
         mPresenter.unsubcribe();
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        if (mPresenter == null) return;
         mPresenter.unsubcribe();
     }
 }

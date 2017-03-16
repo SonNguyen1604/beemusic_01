@@ -20,25 +20,26 @@ import com.framgia.beemusic.databinding.ActivityDisplaySongBinding;
 import com.framgia.beemusic.service.MusicService;
 
 public class DisplaySongActivity extends AppCompatActivity implements DisplaySongContract.View,
-    SeekBar.OnSeekBarChangeListener, MusicService.ListenerMusic {
+    SeekBar.OnSeekBarChangeListener, MusicService.ListenerDetailMusic {
     private static final String EXTRA_SONG = "EXTRA_SONG";
     private static final String EXTRA_SINGER = "EXTRA_SINGER";
     private static final String CURRENT_TIME = "00:00";
     private ActivityDisplaySongBinding mBinding;
-    private static MusicService sService;
+    public static MusicService sService;
     private boolean mIsBound;
     private Song mSong;
     private String mSinger;
     private Intent mIntentService;
     private DisplaySongContract.Presenter mPresenter;
     private BindDisplaySong mModel;
+
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             createService(service);
             mIsBound = true;
             mModel.isPlay.set(true);
-            sService.setListenerMusic(DisplaySongActivity.this);
+            sService.setListenerDetailMusic(DisplaySongActivity.this);
         }
 
         @Override
@@ -184,6 +185,10 @@ public class DisplaySongActivity extends AppCompatActivity implements DisplaySon
         }
         sService.setSong(mSong);
         sService.setSinger(mSinger);
+        if(sService.getCurrentPos() != 0){
+            sService.onResume();
+            return;
+        }
         sService.onPlay();
     }
 

@@ -5,9 +5,15 @@
 
     <data>
 
+        <import type="android.view.View"/>
+
         <variable
-            name="rotate"
-            type="Integer"/>
+            name="activity"
+            type="com.framgia.beemusic.bottombar.BaseActivity"/>
+
+        <variable
+            name="model"
+            type="com.framgia.beemusic.bottombar.BaseActivity.BindBottomModel"/>
     </data>
 
     <LinearLayout
@@ -15,8 +21,10 @@
         android:layout_height="wrap_content"
         android:background="@color/color_green_600"
         android:gravity="center_vertical"
+        android:onClick="@{()->activity.onOpenDetailMusic()}"
         android:orientation="horizontal"
-        android:padding="@dimen/dp_5">
+        android:padding="@dimen/dp_5"
+        android:visibility="@{model.isServiceRunning?View.VISIBLE:View.GONE}">
 
         <com.framgia.beemusic.util.circleimageview.CircleImageView
             android:layout_width="@dimen/dp_50"
@@ -24,15 +32,16 @@
             android:src="@drawable/ic_ava"
             app:civ_border_color="@color/color_white"
             app:civ_border_width="@dimen/dp_1"
-            bind:rotate="@{rotate}"/>
+            bind:rotate="@{model.rotate}"/>
 
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginBottom="@dimen/dp_5"
+            android:layout_marginLeft="@dimen/dp_2"
+            android:layout_marginTop="@dimen/dp_5"
             android:layout_weight="1"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/dp_20"
-            android:paddingTop="@dimen/dp_20">
+            android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
@@ -40,14 +49,18 @@
                 android:layout_weight="1"
                 android:ellipsize="marquee"
                 android:gravity="center_vertical"
-                android:textColor="@color/color_black"/>
+                android:text="@{model.song}"
+                android:textColor="@color/color_white"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical"
-                android:textColor="@color/color_red_500"/>
+                android:text="@{model.singer}"
+                android:textColor="@color/color_red_500"
+                android:textSize="@dimen/sp_12"
+                android:textStyle="italic"/>
         </LinearLayout>
 
         <ImageView
@@ -55,24 +68,27 @@
             android:layout_height="@dimen/dp_25"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_10"
+            android:onClick="@{()->activity.onPrevious()}"
             android:padding="@dimen/dp_2"
             android:src="@drawable/ic_previous"/>
 
         <ImageView
+            android:id="@+id/image_state"
             android:layout_width="@dimen/dp_25"
             android:layout_height="@dimen/dp_25"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_7"
+            android:onClick="@{()->activity.onChangeState(model)}"
             android:padding="@dimen/dp_2"
-            android:src="@drawable/ic_play"/>
+            android:src="@{model.isStatePause? @drawable/ic_play : @drawable/ic_pause}"/>
 
         <ImageView
             android:layout_width="@dimen/dp_25"
             android:layout_height="@dimen/dp_25"
             android:layout_marginLeft="@dimen/dp_10"
             android:layout_marginRight="@dimen/dp_10"
+            android:onClick="@{()->activity.onNext()}"
             android:padding="@dimen/dp_2"
             android:src="@drawable/ic_next"/>
-
     </LinearLayout>
 </layout>
