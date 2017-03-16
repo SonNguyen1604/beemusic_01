@@ -122,6 +122,25 @@ public class SongSingerRepository extends DataHelper implements DataSourceRelati
         }
     }
 
+    @Override
+    public List<Integer> getListIdSong(int idSinger) {
+        String selection = SongSingerSourceContract.SongSingerEntry.COLUMN_ID_SINGER + " = ?";
+        List<Integer> idSongs = new ArrayList<>();
+        int idSong;
+        Cursor cursor = getCursor(selection,
+            new String[]{String.valueOf(idSinger)});
+        if (cursor == null || cursor.getCount() == 0) return null;
+        while (cursor.moveToNext()) {
+            idSong = cursor.getInt(cursor.getColumnIndex(
+                SongSingerSourceContract
+                    .SongSingerEntry.COLUMN_ID_SONG));
+            idSongs.add(idSong);
+        }
+        closeCursor(cursor);
+        closeDatabse();
+        return idSongs;
+    }
+
     private ContentValues createContentValue(int idSong, int idSinger) {
         if (idSinger == -1 && idSong == -1) return null;
         ContentValues contentValues = new ContentValues();

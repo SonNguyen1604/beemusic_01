@@ -14,4 +14,5 @@ public interface DataSourceRelationship {
     int delete(String selection, String[] args);
     int delete(int idSong);
     void deleteAlls();
+    List<Integer> getListIdSong(int id);
 }

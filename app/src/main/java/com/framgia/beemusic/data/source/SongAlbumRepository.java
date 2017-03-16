@@ -28,6 +28,10 @@ public class SongAlbumRepository extends DataHelper implements DataSourceRelatio
         return sSongAlbumRepository;
     }
 
+    /**
+     * @param idSong
+     * @return list of id albums
+     */
     @Override
     public List<Integer> getListId(int idSong) {
         String selection = SongAlbumSourceContract.SongAlbumEntry.COLUMN_ID_SONG + " = ?";
@@ -117,6 +121,24 @@ public class SongAlbumRepository extends DataHelper implements DataSourceRelatio
         } finally {
             closeDatabse();
         }
+    }
+
+    @Override
+    public List<Integer> getListIdSong(int idAlbum) {
+        String selection = SongAlbumSourceContract.SongAlbumEntry.COLUMN_ID_ALBUM + " = ?";
+        List<Integer> idSongs = new ArrayList<>();
+        int idSong;
+        Cursor cursor = getCursor(selection,
+            new String[]{String.valueOf(idAlbum)});
+        if (cursor == null || cursor.getCount() == 0) return null;
+        while (cursor.moveToNext()) {
+            idSong = cursor.getInt(cursor.getColumnIndex(
+                SongAlbumSourceContract.SongAlbumEntry.COLUMN_ID_SONG));
+            idSongs.add(idSong);
+        }
+        closeCursor(cursor);
+        closeDatabse();
+        return idSongs;
     }
 
     private ContentValues createContentValue(int idSong, int idAlbum) {
