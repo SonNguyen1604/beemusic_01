@@ -10,6 +10,7 @@ import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
 import android.os.PowerManager;
 import android.support.annotation.Nullable;
@@ -23,7 +24,7 @@ import com.framgia.beemusic.data.source.SongAlbumRepository;
 import com.framgia.beemusic.data.source.SongRepository;
 import com.framgia.beemusic.data.source.SongSingerRepository;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
-import com.framgia.beemusic.displaysong.DisplaySongActivity;
+import com.framgia.beemusic.main.MainActivity;
 
 import java.util.List;
 
@@ -38,8 +39,9 @@ public class MusicService extends Service
     private static final String ACTION_NEXT = "com.framgia.action.NEXT";
     private static final String ACTION_PREVIOUS = "com.framgia.action.PREVIOUS";
     private static final int NOTIFICATION_ID = 1;
+    private static final int RUNTIME_DELAY = 1000;
 
-    private static enum TYPE_PLAY {
+    public static enum TYPE_PLAY {
         REPEAT,
         SHUFFLE
     }
@@ -59,6 +61,12 @@ public class MusicService extends Service
     private SongSingerRepository mSongSingerRepository;
     private SingerRepository mSingerRepository;
     private TYPE_PLAY mTypePlay;
+
+    public void setListenerMusic(ListenerMusic listenerMusic) {
+        mListenerMusic = listenerMusic;
+    }
+
+    private ListenerMusic mListenerMusic;
 
     @Nullable
     @Override
@@ -118,7 +126,23 @@ public class MusicService extends Service
     public void onPrepared(MediaPlayer mediaPlayer) {
         mMediaPlayer.start();
         setUpAsForeground();
+        updateSeekbar();
+        mListenerMusic.updateDuration(mSong.getDuration());
+        mListenerMusic.updateDetailMusic(mSong, mSinger);
     }
+
+    public void updateSeekbar() {
+        Handler handler = new Handler();
+        handler.postDelayed(mUpdateSeekbarRunable, RUNTIME_DELAY);
+    }
+
+    private Runnable mUpdateSeekbarRunable = new Runnable() {
+        @Override
+        public void run() {
+            mListenerMusic.updateSeekBar(getCurrentPos());
+            updateSeekbar();
+        }
+    };
 
     private void initModel() {
         String selection;
@@ -155,6 +179,7 @@ public class MusicService extends Service
         mSongAlbumRepository = SongAlbumRepository.getInstant(BeeApplication.getInstant());
         mSongSingerRepository = SongSingerRepository.getInstant(BeeApplication.getInstant());
         mSingerRepository = SingerRepository.getInstant(BeeApplication.getInstant());
+        setTypePlay(TYPE_PLAY.SHUFFLE);
         initMediaPlayer();
     }
 
@@ -172,7 +197,16 @@ public class MusicService extends Service
     public void onCompletion(MediaPlayer mediaPlayer) {
         if (mediaPlayer.getCurrentPosition() <= 0) return;
         mediaPlayer.reset();
-        onPlayNext();
+        switch (mTypePlay) {
+            case SHUFFLE:
+                onPlayNext();
+                break;
+            case REPEAT:
+                onPlay();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override
@@ -197,6 +231,7 @@ public class MusicService extends Service
     }
 
     public void onResume() {
+        mMediaPlayer.seekTo(getCurrentPos());
         mMediaPlayer.start();
     }
 
@@ -267,12 +302,13 @@ public class MusicService extends Service
     }
 
     private PendingIntent createPendingIntentAcivity() {
-        Intent intent = new Intent(BeeApplication.getInstant(), DisplaySongActivity.class);
+        Intent intent = new Intent(BeeApplication.getInstant(), MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         return PendingIntent.getActivity(BeeApplication.getInstant(), 0, intent, 0);
     }
 
     private Notification notifyNotification(int drawable, String action) {
+
         PendingIntent notifyPendingIntent, nextPendingIntent,
             previousPendingIntent;
         notifyPendingIntent = createPendingIntentService(action);
@@ -289,7 +325,9 @@ public class MusicService extends Service
             .addAction(R.drawable.ic_previous, ACTION_PREVIOUS, previousPendingIntent)
             .addAction(drawable, ACTION_RESUME, notifyPendingIntent)
             .addAction(R.drawable.ic_next, ACTION_NEXT, nextPendingIntent)
+            .setAutoCancel(action.equals(ACTION_RESUME))
             .build();
+        notification.flags = Notification.DEFAULT_LIGHTS | Notification.FLAG_AUTO_CANCEL;
         return notification;
     }
 
@@ -339,5 +377,11 @@ public class MusicService extends Service
 
     public void setSongs(List<Song> songs) {
         mSongs = songs;
+    }
+
+    public interface ListenerMusic {
+        void updateSeekBar(int pos);
+        void updateDuration(int duration);
+        void updateDetailMusic(Song song, String singer);
     }
 }

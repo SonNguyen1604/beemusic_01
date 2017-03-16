@@ -14,9 +14,11 @@ import android.view.MenuItem;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.SeekBar;
 
 import com.framgia.beemusic.BeeApplication;
 import com.framgia.beemusic.R;
+import com.framgia.beemusic.displaysong.DisplaySongActivity;
 import com.framgia.beemusic.main.MainActivity;
 
 /**
@@ -82,8 +84,9 @@ public class BindingAdapterUtil {
         view.setAdapter(adapter);
     }
 
-    @BindingAdapter({"title", "color"})
-    public static void setPlaySongActionBar(Toolbar toolbar, String title, int color) {
+    @BindingAdapter({"title", "color", "stop"})
+    public static void setPlaySongActionBar(Toolbar toolbar, String title, int color,
+                                            final DisplaySongActivity activity) {
         toolbar.inflateMenu(R.menu.toolbar_display_song);
         toolbar.setTitle(title);
         toolbar.setTitleTextColor(color);
@@ -92,7 +95,7 @@ public class BindingAdapterUtil {
         menuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
-                // todo remove activiy display song
+                activity.finish();
                 return true;
             }
         });
@@ -103,5 +106,12 @@ public class BindingAdapterUtil {
         Animation animation =
             AnimationUtils.loadAnimation(BeeApplication.getInstant(), typeAnimation);
         imageView.startAnimation(animation);
+    }
+
+    @BindingAdapter("listener")
+    public static void onSeekBarChangeListener(SeekBar seekBar,
+                                               SeekBar.OnSeekBarChangeListener listener) {
+        if (listener == null) return;
+        seekBar.setOnSeekBarChangeListener(listener);
     }
 }
