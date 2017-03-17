@@ -11,7 +11,7 @@ import com.framgia.beemusic.data.source.SongAlbumRepository;
 import com.framgia.beemusic.data.source.SongRepository;
 import com.framgia.beemusic.data.source.SongSingerRepository;
 import com.framgia.beemusic.data.source.local.song.SongSourceContract;
-import com.framgia.beemusic.displaysong.DisplaySong;
+import com.framgia.beemusic.displaysong.DisplaySongActivity;
 
 import ru.rambler.libs.swipe_layout.SwipeLayout;
 import rx.Observable;
@@ -117,7 +117,7 @@ public class SongPresenter implements SongContract.Presenter {
 
     @Override
     public void onOpenPlayMusic(Song song, String singer) {
-        BeeApplication.getInstant().startActivity(DisplaySong.getIntent(song, singer));
+        BeeApplication.getInstant().startActivity(DisplaySongActivity.getIntent(song, singer));
     }
 
     @Override

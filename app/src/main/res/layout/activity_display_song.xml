@@ -23,48 +23,133 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolBar"
-            xmlns:android="http://schemas.android.com/apk/res/android"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/color_green_600"
-            android:minHeight="?attr/actionBarSize"
-            app:theme="@style/SearchView"
-            bind:color="@{@color/color_white}"
-            bind:title="@{@string/app_name}"/>
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
 
-        <com.framgia.beemusic.util.circleimageview.CircleImageView
-            android:id="@+id/image_song"
-            android:layout_width="@dimen/dp_160"
-            android:layout_height="@dimen/dp_160"
-            android:layout_gravity="center"
-            android:paddingTop="@dimen/dp_10"
-            android:src="@drawable/ic_ava"
-            app:civ_border_color="@color/color_white"
-            app:civ_border_width="@dimen/dp_2"
-            bind:rotate="@{rotate}"/>
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/tool_bar"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/color_green_600"
+                android:minHeight="?attr/actionBarSize"
+                app:theme="@style/SearchView"
+                bind:color="@{@color/color_white}"
+                bind:title="@{@string/app_name}"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dp_10"
-            android:text="@{song.name}"
-            android:textColor="@color/color_black"/>
+            <com.framgia.beemusic.util.circleimageview.CircleImageView
+                android:id="@+id/image_song"
+                android:layout_width="@dimen/dp_300"
+                android:layout_height="@dimen/dp_300"
+                android:layout_gravity="center"
+                android:paddingTop="@dimen/dp_10"
+                android:src="@drawable/ic_ava"
+                app:civ_border_color="@color/color_white"
+                app:civ_border_width="@dimen/dp_2"
+                bind:rotate="@{rotate}"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/dp_10"
-            android:text="@{singer}"
-            android:textColor="@color/color_red_500"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_10"
+                android:ellipsize="marquee"
+                android:text="@{song.name}"
+                android:textColor="@color/color_black"/>
 
-        <View
-            android:id="@+id/view_media"
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/dp_10"
+                android:text="@{singer}"
+                android:textColor="@color/color_red_500"/>
+        </LinearLayout>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="@dimen/dp_100"
+            android:background="@color/color_green_600">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_20"
+                android:layout_marginTop="@dimen/dp_10"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_white"/>
+
+                <SeekBar
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@color/color_green_600"
+                    android:padding="@dimen/dp_2"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/color_white"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/dp_50"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_shuffle"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_25"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:padding="@dimen/dp_2"
+                    android:src="@drawable/ic_previous"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_25"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:padding="@dimen/dp_2"
+                    android:src="@drawable/ic_play"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_25"
+                    android:layout_marginLeft="@dimen/dp_10"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:padding="@dimen/dp_2"
+                    android:src="@drawable/ic_next"/>
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="@dimen/dp_20"
+                    android:layout_marginRight="@dimen/dp_10"
+                    android:layout_weight="1"
+                    android:src="@drawable/ic_repeat"/>
+            </LinearLayout>
+        </RelativeLayout>
+
     </LinearLayout>
-
 </layout>
