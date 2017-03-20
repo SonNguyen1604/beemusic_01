@@ -31,8 +31,8 @@
 
         <activity
             android:name=".displaysong.DisplaySongActivity"
-            android:screenOrientation="portrait"
-            android:launchMode="singleTop"/>
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"/>
     </application>
 
 </manifest>

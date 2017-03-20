@@ -35,7 +35,7 @@ public class SongFragment extends Fragment implements SongContract.FragmentView 
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_song, container, false);
         mBinding = DataBindingUtil.bind(view);
-        mPresenter.subcribe();
+        if (mPresenter != null) mPresenter.subcribe();
         return view;
     }
 

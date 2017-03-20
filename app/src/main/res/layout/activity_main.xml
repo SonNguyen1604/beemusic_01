@@ -58,9 +58,7 @@
 
             <include
                 layout="@layout/bottom_bar"
-                bind:rotate="@{rotate}"
-                bind:singer="@{singer}"
-                bind:song="@{song}"/>
+                bind:rotate="@{rotate}"/>
         </LinearLayout>
 
         <android.support.design.widget.NavigationView
