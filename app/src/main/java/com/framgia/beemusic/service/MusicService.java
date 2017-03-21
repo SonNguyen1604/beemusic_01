@@ -34,10 +34,10 @@ import java.util.List;
 public class MusicService extends Service
     implements MediaPlayer.OnPreparedListener, MediaPlayer.OnErrorListener,
     MediaPlayer.OnBufferingUpdateListener, MediaPlayer.OnCompletionListener {
-    private static final String ACTION_RESUME = "com.framgia.action.RESUME";
-    private static final String ACTION_PAUSE = "com.framgia.action.PAUSE";
-    private static final String ACTION_NEXT = "com.framgia.action.NEXT";
-    private static final String ACTION_PREVIOUS = "com.framgia.action.PREVIOUS";
+    public static final String ACTION_RESUME = "com.framgia.action.RESUME";
+    public static final String ACTION_PAUSE = "com.framgia.action.PAUSE";
+    public static final String ACTION_NEXT = "com.framgia.action.NEXT";
+    public static final String ACTION_PREVIOUS = "com.framgia.action.PREVIOUS";
     private static final int NOTIFICATION_ID = 1;
     private static final int RUNTIME_DELAY = 1000;
 
@@ -61,12 +61,13 @@ public class MusicService extends Service
     private SongSingerRepository mSongSingerRepository;
     private SingerRepository mSingerRepository;
     private TYPE_PLAY mTypePlay;
+    private boolean mIsPlaying;
 
-    public void setListenerMusic(ListenerMusic listenerMusic) {
-        mListenerMusic = listenerMusic;
+    public void setListenerDetailMusic(ListenerDetailMusic listenerDetailMusic) {
+        mListenerDetailMusic = listenerDetailMusic;
     }
 
-    private ListenerMusic mListenerMusic;
+    private ListenerDetailMusic mListenerDetailMusic;
 
     @Nullable
     @Override
@@ -88,14 +89,9 @@ public class MusicService extends Service
         switch (action) {
             case ACTION_RESUME:
                 onResume();
-                mNotificationManager.notify(NOTIFICATION_ID,
-                    notifyNotification(R.drawable.ic_pause, ACTION_PAUSE));
                 break;
             case ACTION_PAUSE:
                 onPause();
-                mNotificationManager.notify(NOTIFICATION_ID,
-                    notifyNotification(R.drawable.ic_play, ACTION_RESUME));
-                stopForeground(false);
                 break;
             case ACTION_NEXT:
                 onPlayNext();
@@ -129,8 +125,9 @@ public class MusicService extends Service
         mMediaPlayer.start();
         setUpAsForeground();
         updateSeekbar();
-        mListenerMusic.updateDuration(mSong.getDuration());
-        mListenerMusic.updateDetailMusic(mSong, mSinger);
+        mIsPlaying = true;
+        mListenerDetailMusic.updateDuration(mSong.getDuration());
+        mListenerDetailMusic.updateDetailMusic(mSong, mSinger);
     }
 
     public void updateSeekbar() {
@@ -141,7 +138,7 @@ public class MusicService extends Service
     private Runnable mUpdateSeekbarRunable = new Runnable() {
         @Override
         public void run() {
-            mListenerMusic.updateSeekBar(getCurrentPos());
+            mListenerDetailMusic.updateSeekBar(getCurrentPos());
             updateSeekbar();
         }
     };
@@ -235,10 +232,19 @@ public class MusicService extends Service
     public void onResume() {
         mMediaPlayer.seekTo(getCurrentPos());
         mMediaPlayer.start();
+        mIsPlaying = true;
+        sendBroadcast(new Intent(ACTION_RESUME));
+        mNotificationManager.notify(NOTIFICATION_ID,
+            notifyNotification(R.drawable.ic_pause, ACTION_PAUSE));
     }
 
     public void onPause() {
         mMediaPlayer.pause();
+        mIsPlaying = false;
+        sendBroadcast(new Intent(ACTION_PAUSE));
+        mNotificationManager.notify(NOTIFICATION_ID,
+            notifyNotification(R.drawable.ic_play, ACTION_RESUME));
+        stopForeground(false);
     }
 
     public void onPlayNext() {
@@ -254,6 +260,7 @@ public class MusicService extends Service
         if (ids == null) return;
         mSinger = mSingerRepository.getModel(ids.get(0)).getName();
         onPlay();
+        sendBroadcast(new Intent(ACTION_NEXT));
     }
 
     public void onPlayPrevious() {
@@ -269,6 +276,7 @@ public class MusicService extends Service
         if (ids == null) return;
         mSinger = mSingerRepository.getModel(ids.get(0)).getName();
         onPlay();
+        sendBroadcast(new Intent(ACTION_PREVIOUS));
     }
 
     public void onSeek(int pos) {
@@ -279,8 +287,12 @@ public class MusicService extends Service
         return mMediaPlayer.getCurrentPosition();
     }
 
-    void setUpAsForeground() {
+    private void setUpAsForeground() {
         startForeground(NOTIFICATION_ID, notifyNotification(R.drawable.ic_pause, ACTION_PAUSE));
+    }
+
+    public boolean isPlaying() {
+        return mIsPlaying;
     }
 
     public TYPE_PLAY getTypePlay() {
@@ -380,7 +392,7 @@ public class MusicService extends Service
         mSongs = songs;
     }
 
-    public interface ListenerMusic {
+    public interface ListenerDetailMusic {
         void updateSeekBar(int pos);
         void updateDuration(int duration);
         void updateDetailMusic(Song song, String singer);
