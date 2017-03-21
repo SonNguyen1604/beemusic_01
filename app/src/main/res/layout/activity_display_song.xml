@@ -151,7 +151,7 @@
                     android:layout_marginLeft="@dimen/dp_10"
                     android:layout_marginRight="@dimen/dp_10"
                     android:layout_weight="1"
-                    android:onClick="@{()->view.onPause()}"
+                    android:onClick="@{()->view.onPauseMusic()}"
                     android:padding="@dimen/dp_2"
                     android:src="@drawable/ic_pause"
                     android:visibility="@{model.isPlay ? View.VISIBLE : View.GONE }"/>
@@ -176,6 +176,5 @@
                     android:src="@{model.isShuffle? @drawable/ic_repeat : @drawable/ic_repeat_black}"/>
             </LinearLayout>
         </RelativeLayout>
-
     </LinearLayout>
 </layout>

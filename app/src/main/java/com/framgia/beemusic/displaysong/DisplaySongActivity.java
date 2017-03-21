@@ -103,8 +103,7 @@ public class DisplaySongActivity extends AppCompatActivity implements DisplaySon
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onPauseMusic() {
         if (sService == null) return;
         sService.onPause();
         mModel.isPlay.set(false);

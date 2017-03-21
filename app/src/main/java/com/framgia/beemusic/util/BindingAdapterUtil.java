@@ -107,7 +107,7 @@ public class BindingAdapterUtil {
             AnimationUtils.loadAnimation(BeeApplication.getInstant(), typeAnimation);
         imageView.startAnimation(animation);
     }
-
+    
     @BindingAdapter("listener")
     public static void onSeekBarChangeListener(SeekBar seekBar,
                                                SeekBar.OnSeekBarChangeListener listener) {
