@@ -62,7 +62,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
     public List<Album> getAlbums() {
         return mAlbums;
     }
-
+    
     public void removeItem(int pos) {
         mAlbums.remove(pos);
         notifyItemRemoved(pos);
