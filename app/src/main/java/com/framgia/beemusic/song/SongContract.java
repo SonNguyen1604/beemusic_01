@@ -12,7 +12,7 @@ import ru.rambler.libs.swipe_layout.SwipeLayout;
  * Created by beepi on 03/03/2017.
  */
 public interface SongContract {
-    interface FragmentView extends BaseFragmentView<Presenter> {
+    interface View extends BaseFragmentView<Presenter> {
         void initRecycleview(ObservableArrayList<Song> songs, ObservableArrayList<String> singer);
         void notifyItemRemove(int pos);
     }

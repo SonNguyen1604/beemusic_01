@@ -24,7 +24,7 @@ import rx.subscriptions.CompositeSubscription;
  * Created by beepi on 03/03/2017.
  */
 public class SongPresenter implements SongContract.Presenter {
-    private SongContract.FragmentView mView;
+    private SongContract.View mView;
     private SongRepository mSongHandler;
     private AlbumRepository mAlbumHandler;
     private SingerRepository mSingerHandler;
@@ -32,7 +32,7 @@ public class SongPresenter implements SongContract.Presenter {
     private SongSingerRepository mSongSingerHandler;
     private CompositeSubscription mSubscription;
 
-    public SongPresenter(@NonNull SongContract.FragmentView view,
+    public SongPresenter(@NonNull SongContract.View view,
                          SongRepository songHandler,
                          AlbumRepository albumHandler,
                          SingerRepository singerHandler,

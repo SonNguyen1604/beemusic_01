@@ -34,7 +34,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/dp_5"
-                android:text="@string/title_local_music"
+                android:text="@string/title_song_local"
                 android:textColor="@color/color_black"
                 android:textSize="@dimen/pt_10"
                 android:textStyle="bold"/>

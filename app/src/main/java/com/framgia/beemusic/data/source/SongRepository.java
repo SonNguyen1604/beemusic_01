@@ -67,7 +67,7 @@ public class SongRepository implements DataSource<Song> {
     public Observable<Song> getDataObservableByModels(List<Song> models) {
         return mLocalHandler.getDataObservableByModels(models);
     }
-
+    
     public List<Song> getModel(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return null;
         List<Song> songs = new ArrayList<>();

@@ -12,7 +12,7 @@
     <string name="title_singer">Singer</string>
     <string name="title_favorite">Favorite</string>
     <string name="title_feedback">FeedBack</string>
-    <string name="title_local_music">Local Music</string>
+    <string name="title_song_local">Local Song</string>
     <string name="msg_open_drawer">open</string>
     <string name="msg_close_drawer">close</string>
     <string name="title_search">search</string>

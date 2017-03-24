@@ -15,9 +15,9 @@ public class ActivityUtils {
     private final static String PREF_INSTALL = "is_installed";
     private final static String KEY_INSTALL = "installed";
 
-    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
-                                             @NonNull Fragment fragment, int frameId) {
-        fragmentManager.beginTransaction().add(frameId, fragment).commit();
+    public static void replaceFragmentToActivity(@NonNull FragmentManager fragmentManager,
+                                                 @NonNull Fragment fragment, int frameId) {
+        fragmentManager.beginTransaction().replace(frameId, fragment).commit();
     }
 
     public static boolean isInstalled(Context context) {
