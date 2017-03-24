@@ -27,10 +27,10 @@ public class MusicReceiver extends BroadcastReceiver {
                 mListener.onUpdateDetailBottom();
                 break;
             case MusicService.ACTION_PAUSE:
-                mListener.onPauseMusic();
+                mListener.onPauseReceiver();
                 break;
             case MusicService.ACTION_RESUME:
-                mListener.onPlayMusic();
+                mListener.onPlayReceiver();
                 break;
             default:
                 break;
@@ -39,7 +39,7 @@ public class MusicReceiver extends BroadcastReceiver {
 
     public interface ListenerBroadcast {
         void onUpdateDetailBottom();
-        void onPauseMusic();
-        void onPlayMusic();
+        void onPauseReceiver();
+        void onPlayReceiver();
     }
 }

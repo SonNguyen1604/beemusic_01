@@ -161,6 +161,7 @@ public class SongPresenter implements SongContract.Presenter {
                 @Override
                 public void onError(Throwable e) {
                     e.printStackTrace();
+                    mView.initRecycleview(songs, singers);
                 }
 
                 @Override

@@ -3,6 +3,7 @@ package com.framgia.beemusic.displaysong;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableBoolean;
@@ -15,12 +16,14 @@ import android.widget.SeekBar;
 
 import com.framgia.beemusic.BeeApplication;
 import com.framgia.beemusic.R;
+import com.framgia.beemusic.broadcastreceiver.MusicReceiver;
 import com.framgia.beemusic.data.model.Song;
 import com.framgia.beemusic.databinding.ActivityDisplaySongBinding;
 import com.framgia.beemusic.service.MusicService;
 
 public class DisplaySongActivity extends AppCompatActivity implements DisplaySongContract.View,
-    SeekBar.OnSeekBarChangeListener, MusicService.ListenerDetailMusic {
+    SeekBar.OnSeekBarChangeListener, MusicService.ListenerDetailMusic,
+    MusicReceiver.ListenerBroadcast {
     private static final String EXTRA_SONG = "EXTRA_SONG";
     private static final String EXTRA_SINGER = "EXTRA_SINGER";
     private static final String CURRENT_TIME = "00:00";
@@ -32,13 +35,15 @@ public class DisplaySongActivity extends AppCompatActivity implements DisplaySon
     private Intent mIntentService;
     private DisplaySongContract.Presenter mPresenter;
     private BindDisplaySong mModel;
-
+    private MusicReceiver mReceiver;
     private ServiceConnection mConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             createService(service);
             mIsBound = true;
             mModel.isPlay.set(true);
+            mModel.isRepeat.set(sService.getTypeRepeat());
+            mModel.isShuffle.set(sService.getTypeShuffle());
             sService.setListenerDetailMusic(DisplaySongActivity.this);
         }
 
@@ -63,6 +68,7 @@ public class DisplaySongActivity extends AppCompatActivity implements DisplaySon
         bindExtraBundle();
         bindService();
         bindData();
+        registerReceiver();
     }
 
     @Override
@@ -97,50 +103,76 @@ public class DisplaySongActivity extends AppCompatActivity implements DisplaySon
         bindService(mIntentService, mConnection, Context.BIND_AUTO_CREATE);
     }
 
+    private void registerReceiver() {
+        mReceiver = new MusicReceiver(this);
+        IntentFilter intent = new IntentFilter();
+        intent.addAction(MusicService.ACTION_PREVIOUS);
+        intent.addAction(MusicService.ACTION_RESUME);
+        intent.addAction(MusicService.ACTION_NEXT);
+        intent.addAction(MusicService.ACTION_PAUSE);
+        registerReceiver(mReceiver, intent);
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
         unbindService(mConnection);
+        unregisterReceiver(mReceiver);
+    }
+
+    @Override
+    public void onUpdateDetailBottom() {
+    }
+
+    @Override
+    public void onPauseReceiver() {
+        mModel.isPlay.set(false);
+    }
+
+    @Override
+    public void onPlayReceiver() {
+        mModel.isPlay.set(true);
     }
 
     @Override
     public void onPauseMusic() {
         if (sService == null) return;
         sService.onPause();
-        mModel.isPlay.set(false);
     }
 
     @Override
     public void onPlay() {
         if (sService == null) return;
         sService.onResume();
-        mModel.isPlay.set(true);
     }
 
     @Override
     public void onNext() {
         if (sService == null) return;
-        sService.onPlayNext();
+        sService.onPlayNextRepeat();
     }
 
     @Override
     public void onPrevious() {
         if (sService == null) return;
-        sService.onPlayPrevious();
+        sService.onPlayPreviousRepeat();
     }
 
     @Override
     public void onShuffle() {
         if (sService == null) return;
-        sService.setTypePlay(MusicService.TYPE_PLAY.SHUFFLE);
-        mModel.isShuffle.set(true);
+        mModel.isShuffle.set(mModel.isShuffle.get() == MusicService.ShuffleType.OFF ?
+            MusicService.ShuffleType.ON : MusicService.ShuffleType.OFF);
+        initTypePlay();
     }
 
     @Override
     public void onRepeat() {
         if (sService == null) return;
-        sService.setTypePlay(MusicService.TYPE_PLAY.REPEAT);
-        mModel.isShuffle.set(false);
+        mModel.isRepeat.set(mModel.isRepeat.get() == MusicService.RepeatType.ALL
+            ? MusicService.RepeatType.ONE : mModel.isRepeat.get() == MusicService.RepeatType.ONE
+            ? MusicService.RepeatType.OFF : MusicService.RepeatType.ALL);
+        initTypePlay();
     }
 
     @Override
@@ -171,25 +203,37 @@ public class DisplaySongActivity extends AppCompatActivity implements DisplaySon
     }
 
     @Override
-    public void updateDetailMusic(Song song, String singer) {
-        mSong = song;
-        mSinger = singer;
-        mModel.song.set(mSong.getName());
-        mModel.singer.set(mSinger);
+    public void updateDetailMusic() {
+        mSong = sService.getSong();
+        mSinger = sService.getSinger();
+        mModel.song.set(sService.getSong().getName());
+        mModel.singer.set(sService.getSinger());
     }
 
     private void createService(IBinder service) {
         if (sService == null) {
             MusicService.MusicBinder binder = (MusicService.MusicBinder) service;
             sService = binder.getService();
+            sService.setSong(mSong);
+            sService.setSinger(mSinger);
+            sService.onPlay();
+            return;
         }
-        sService.setSong(mSong);
-        sService.setSinger(mSinger);
-        if(sService.getCurrentPos() != 0){
+        if (sService.getSong().getId() == mSong.getId()) {
+            updateDuration(mSong.getDuration());
+            updateDetailMusic();
             sService.onResume();
             return;
         }
+        sService.setSong(mSong);
+        sService.setSinger(mSinger);
         sService.onPlay();
+    }
+
+    private void initTypePlay() {
+        sService.setTypeRepeat(mModel.isRepeat.get());
+        if (mModel.isShuffle.get() == MusicService.ShuffleType.ON) sService.shuffleListSong();
+        sService.setTypeShuffle(mModel.isShuffle.get());
     }
 
     public class BindDisplaySong {
@@ -201,6 +245,7 @@ public class DisplaySongActivity extends AppCompatActivity implements DisplaySon
         public final ObservableField<String> currentTime = new ObservableField<>();
         public final ObservableInt totalProgress = new ObservableInt();
         public final ObservableInt currentProgress = new ObservableInt();
-        public final ObservableBoolean isShuffle = new ObservableBoolean(true);
+        public final ObservableField<MusicService.ShuffleType> isShuffle = new ObservableField<>();
+        public final ObservableField<MusicService.RepeatType> isRepeat = new ObservableField<>();
     }
 }

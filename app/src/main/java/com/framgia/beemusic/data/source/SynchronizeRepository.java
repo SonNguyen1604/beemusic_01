@@ -103,8 +103,8 @@ public class SynchronizeRepository implements SynchronizeContract {
     private Album getAlbum(Cursor cursor) {
         String nameALbum = cursor.getString(cursor.getColumnIndexOrThrow(
             MediaStore.Audio.Media.ALBUM));
-        int idAlbum = cursor.getInt(cursor.getInt(cursor.getColumnIndexOrThrow(
-            MediaStore.Audio.Media.ALBUM_ID)));
+        int idAlbum = cursor.getInt(cursor.getColumnIndexOrThrow(
+            MediaStore.Audio.Media.ALBUM_ID));
         return new Album(idAlbum, nameALbum, null, 1);
     }
 
