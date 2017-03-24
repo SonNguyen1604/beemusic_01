@@ -121,10 +121,10 @@ public class BindingAdapterUtil {
     }
 
     @BindingAdapter({"touchListener", "holder"})
-    public static void setOnTouchListener(ImageView image,
+    public static void setOnTouchListener(final View view,
                                           final DragAndDrop.OnDragListener listener,
                                           final AlbumAdapter.AlbumViewHolder holder) {
-        image.setOnTouchListener(new View.OnTouchListener() {
+        view.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
                 if (MotionEventCompat.getActionMasked(motionEvent) == MotionEvent.ACTION_DOWN) {
@@ -133,10 +133,14 @@ public class BindingAdapterUtil {
                 return false;
             }
         });
-        image.setOnLongClickListener(new View.OnLongClickListener() {
+        view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                // Todo set long click
+                if (holder.isTransparent.get()) {
+                    holder.isTransparent.set(false);
+                    return false;
+                }
+                holder.isTransparent.set(true);
                 return true;
             }
         });

@@ -9,6 +9,7 @@ import com.framgia.beemusic.data.source.SynchronizeRepository;
 
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -41,7 +42,7 @@ public class MainPresenter implements MainContract.Presenter {
         Subscription subscription = mSynchronizeRepository.getCursorObservable
             (mSynchronizeRepository.getCursorFromMediastore())
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Subscriber<Cursor>() {
                 @Override
                 public void onCompleted() {

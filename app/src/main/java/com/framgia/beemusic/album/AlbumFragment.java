@@ -1,11 +1,12 @@
 package com.framgia.beemusic.album;
 
+import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
-import android.databinding.ObservableArrayList;
 import android.databinding.ObservableField;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.databinding.FragmentAlbumBinding;
 import com.framgia.beemusic.util.draganddrop.DragAndDrop;
 import com.framgia.beemusic.util.draganddrop.ItemTouchHelperCallback;
+
+import java.util.List;
 
 /**
  * Created by beepi on 24/03/2017.
@@ -52,14 +55,6 @@ public class AlbumFragment extends Fragment implements AlbumContract.View,
         return view;
     }
 
-    public ObservableField<AlbumAdapter> getAdapter() {
-        return mAdapter;
-    }
-
-    public int getSpanCount() {
-        return mSpanCount;
-    }
-
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -71,7 +66,7 @@ public class AlbumFragment extends Fragment implements AlbumContract.View,
     }
 
     @Override
-    public void initRecycleview(ObservableArrayList<Album> albums) {
+    public void initRecycleview(List<Album> albums) {
         if (mPresenter == null) return;
         mAdapter.set(new AlbumAdapter(albums, mPresenter, this));
         initDragAndDrop();
@@ -79,7 +74,24 @@ public class AlbumFragment extends Fragment implements AlbumContract.View,
 
     @Override
     public void notifyItemRemove(int pos) {
-        // todo delete album
+        mAdapter.get().removeItem(pos);
+    }
+
+    @Override
+    public void showDialog(final Album album, final int pos) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+            .setCancelable(true)
+            .setTitle(R.string.title_delete_album)
+            .setNegativeButton(android.R.string.no, null)
+            .setPositiveButton(android.R.string.yes,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        mPresenter.onDeleteAlbum(album, pos);
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     @Override
@@ -110,5 +122,13 @@ public class AlbumFragment extends Fragment implements AlbumContract.View,
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    public ObservableField<AlbumAdapter> getAdapter() {
+        return mAdapter;
+    }
+
+    public int getSpanCount() {
+        return mSpanCount;
     }
 }
