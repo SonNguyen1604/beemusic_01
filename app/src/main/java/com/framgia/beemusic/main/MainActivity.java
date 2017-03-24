@@ -19,7 +19,10 @@ import android.widget.Toast;
 
 import com.framgia.beemusic.BaseFragmentView;
 import com.framgia.beemusic.R;
+import com.framgia.beemusic.album.AlbumFragment;
+import com.framgia.beemusic.album.AlbumPresenter;
 import com.framgia.beemusic.bottombar.BaseActivity;
+import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
 import com.framgia.beemusic.data.source.SongAlbumRepository;
@@ -44,6 +47,8 @@ public class MainActivity extends BaseActivity
     private static final int WRITE_EXTERNAL_STORAGE_CODE = 1;
     private ActivityMainBinding mBinding;
     private SongFragment mSongFragment;
+    private AlbumFragment mAlbumFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         requestWindowFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
@@ -113,7 +118,6 @@ public class MainActivity extends BaseActivity
                 }
             }
         }
-
     }
 
     private void initPresenter() {
@@ -149,7 +153,7 @@ public class MainActivity extends BaseActivity
                 initSongFragment();
                 break;
             case R.id.item_album:
-                // todo open fragment album
+                initAlbumFragment();
                 break;
             case R.id.item_singer:
                 // todo open fragment singer
@@ -179,13 +183,24 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void initSongFragment() {
-        mSongFragment =
-            (SongFragment) getSupportFragmentManager().findFragmentById(R.id.linear_content);
-        if (mSongFragment != null) return;
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.linear_content);
+        if (fragment instanceof SongFragment) return;
         mSongFragment = SongFragment.newInstance();
-        ActivityUtils.addFragmentToActivity(getSupportFragmentManager(),
+        ActivityUtils.replaceFragmentToActivity(getSupportFragmentManager(),
             mSongFragment, R.id.linear_content);
         new SongPresenter(mSongFragment, SongRepository.getInstant(this),
+            AlbumRepository.getInstant(this), SingerRepository.getInstant(this),
+            SongAlbumRepository.getInstant(this), SongSingerRepository.getInstant(this));
+    }
+
+    @Override
+    public void initAlbumFragment() {
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.linear_content);
+        if (fragment instanceof AlbumFragment) return;
+        mAlbumFragment = AlbumFragment.newInstance();
+        ActivityUtils.replaceFragmentToActivity(getSupportFragmentManager(),
+            mAlbumFragment, R.id.linear_content);
+        new AlbumPresenter(mAlbumFragment, SongRepository.getInstant(this),
             AlbumRepository.getInstant(this), SingerRepository.getInstant(this),
             SongAlbumRepository.getInstant(this), SongSingerRepository.getInstant(this));
     }

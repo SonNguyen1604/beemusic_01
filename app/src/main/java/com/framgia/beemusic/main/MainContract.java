@@ -9,6 +9,7 @@ public interface MainContract {
     interface View {
         void startObserverService();
         void initSongFragment();
+        void initAlbumFragment();
         void onSearch(String keySearch);
     }
 
