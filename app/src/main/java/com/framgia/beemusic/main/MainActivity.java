@@ -22,7 +22,6 @@ import com.framgia.beemusic.R;
 import com.framgia.beemusic.album.AlbumFragment;
 import com.framgia.beemusic.album.AlbumPresenter;
 import com.framgia.beemusic.bottombar.BaseActivity;
-import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.data.source.AlbumRepository;
 import com.framgia.beemusic.data.source.SingerRepository;
 import com.framgia.beemusic.data.source.SongAlbumRepository;
