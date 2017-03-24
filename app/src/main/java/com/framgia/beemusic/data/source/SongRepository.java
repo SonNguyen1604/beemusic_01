@@ -14,7 +14,7 @@ import rx.Observable;
 /**
  * Created by beepi on 17/02/2017.
  */
-public class SongRepository implements DataSource<Song> {
+public class SongRepository implements SongDataSource {
     private static SongRepository mSongRepository;
     private DataSource<Song> mLocalHandler;
 
@@ -64,10 +64,12 @@ public class SongRepository implements DataSource<Song> {
         mLocalHandler.deleteAlls();
     }
 
+    @Override
     public Observable<Song> getDataObservableByModels(List<Song> models) {
         return mLocalHandler.getDataObservableByModels(models);
     }
-    
+
+    @Override
     public List<Song> getModel(Cursor cursor) {
         if (cursor == null || cursor.getCount() == 0) return null;
         List<Song> songs = new ArrayList<>();

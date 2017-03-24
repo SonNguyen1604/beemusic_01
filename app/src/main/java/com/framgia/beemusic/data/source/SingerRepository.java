@@ -15,7 +15,7 @@ import rx.Observable;
 /**
  * Created by beepi on 19/02/2017.
  */
-public class SingerRepository implements DataSource<Singer> {
+public class SingerRepository implements SingerDataSource {
     private final static String DEFAULT_SINGER = "unknown";
     private static SingerRepository sSingerRepository;
     private DataSource<Singer> mLocalHandler;
@@ -56,6 +56,7 @@ public class SingerRepository implements DataSource<Singer> {
         return mLocalHandler.update(model);
     }
 
+    @Override
     public void updateCountByDelSong(List<Integer> idSingers) {
         if (idSingers == null) return;
         for (Integer id : idSingers) {
@@ -81,6 +82,7 @@ public class SingerRepository implements DataSource<Singer> {
         return mLocalHandler.getDataObservableByModels(models);
     }
 
+    @Override
     public String getSingerNameByIds(List<Integer> idSingers) {
         if (idSingers == null || idSingers.size() == 0) return null;
         String singerIds = "";

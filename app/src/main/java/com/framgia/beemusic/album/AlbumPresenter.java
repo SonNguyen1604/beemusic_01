@@ -6,11 +6,10 @@ import android.support.annotation.NonNull;
 import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.data.model.Singer;
 import com.framgia.beemusic.data.model.Song;
-import com.framgia.beemusic.data.source.AlbumRepository;
-import com.framgia.beemusic.data.source.SingerRepository;
-import com.framgia.beemusic.data.source.SongAlbumRepository;
-import com.framgia.beemusic.data.source.SongRepository;
-import com.framgia.beemusic.data.source.SongSingerRepository;
+import com.framgia.beemusic.data.source.AlbumDataSource;
+import com.framgia.beemusic.data.source.DataSourceRelationship;
+import com.framgia.beemusic.data.source.SingerDataSource;
+import com.framgia.beemusic.data.source.SongDataSource;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -22,19 +21,19 @@ import rx.subscriptions.CompositeSubscription;
  */
 public class AlbumPresenter implements AlbumContract.Presenter {
     private AlbumContract.View mView;
-    private SongRepository mSongHandler;
-    private AlbumRepository mAlbumHandler;
-    private SingerRepository mSingerHandler;
-    private SongAlbumRepository mSongAlbumHandler;
-    private SongSingerRepository mSongSingerHandler;
+    private SongDataSource mSongHandler;
+    private AlbumDataSource mAlbumHandler;
+    private SingerDataSource mSingerHandler;
+    private DataSourceRelationship mSongAlbumHandler;
+    private DataSourceRelationship mSongSingerHandler;
     private CompositeSubscription mSubscription;
 
     public AlbumPresenter(@NonNull AlbumContract.View view,
-                          SongRepository songHandler,
-                          AlbumRepository albumHandler,
-                          SingerRepository singerHandler,
-                          SongAlbumRepository songAlbumHandler,
-                          SongSingerRepository songSingerHandler) {
+                          SongDataSource songHandler,
+                          AlbumDataSource albumHandler,
+                          SingerDataSource singerHandler,
+                          DataSourceRelationship songAlbumHandler,
+                          DataSourceRelationship songSingerHandler) {
         mView = view;
         mSongHandler = songHandler;
         mAlbumHandler = albumHandler;

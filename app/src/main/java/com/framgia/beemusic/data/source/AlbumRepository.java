@@ -13,7 +13,7 @@ import rx.Observable;
 /**
  * Created by beepi on 19/02/2017.
  */
-public class AlbumRepository implements DataSource<Album> {
+public class AlbumRepository implements AlbumDataSource {
     private static AlbumRepository sAlbumRepository;
     private DataSource<Album> mLocalHandler;
 
@@ -43,6 +43,7 @@ public class AlbumRepository implements DataSource<Album> {
         return mLocalHandler.update(model);
     }
 
+    @Override
     public void updateCountForDelSong(List<Integer> idAlbums) {
         if (idAlbums == null) return;
         for (Integer id : idAlbums) {
