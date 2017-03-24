@@ -76,8 +76,8 @@ public class AlbumPresenter implements AlbumContract.Presenter {
                 }
 
                 @Override
-                public void onNext(Album song) {
-                    albums.add(song);
+                public void onNext(Album album) {
+                    albums.add(album);
                 }
             });
         mSubscription.add(subscription);

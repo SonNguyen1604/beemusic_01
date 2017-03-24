@@ -20,7 +20,7 @@ import com.framgia.beemusic.databinding.FragmentAlbumBinding;
 public class AlbumFragment extends Fragment implements AlbumContract.View {
     private AlbumContract.Presenter mPresenter;
     private FragmentAlbumBinding mBinding;
-    private ObservableField<AlbumAdapter> mAdapter;
+    private ObservableField<AlbumAdapter> mAdapter = new ObservableField<>();
     private int mSpanCount;
 
     public AlbumFragment() {
@@ -66,7 +66,8 @@ public class AlbumFragment extends Fragment implements AlbumContract.View {
 
     @Override
     public void initRecycleview(ObservableArrayList<Album> albums) {
-        // todo init adapter
+        if (mPresenter == null) return;
+        mAdapter.set(new AlbumAdapter(albums, mPresenter));
     }
 
     @Override
