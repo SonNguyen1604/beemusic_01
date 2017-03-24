@@ -3,6 +3,7 @@ package com.framgia.beemusic.util;
 import android.app.SearchManager;
 import android.content.Context;
 import android.databinding.BindingAdapter;
+import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,8 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -18,8 +21,10 @@ import android.widget.SeekBar;
 
 import com.framgia.beemusic.BeeApplication;
 import com.framgia.beemusic.R;
+import com.framgia.beemusic.album.AlbumAdapter;
 import com.framgia.beemusic.displaysong.DisplaySongActivity;
 import com.framgia.beemusic.main.MainActivity;
+import com.framgia.beemusic.util.draganddrop.DragAndDrop;
 
 /**
  * Created by beepi on 27/02/2017.
@@ -113,5 +118,27 @@ public class BindingAdapterUtil {
                                                SeekBar.OnSeekBarChangeListener listener) {
         if (listener == null) return;
         seekBar.setOnSeekBarChangeListener(listener);
+    }
+
+    @BindingAdapter({"touchListener", "holder"})
+    public static void setOnTouchListener(ImageView image,
+                                          final DragAndDrop.OnDragListener listener,
+                                          final AlbumAdapter.AlbumViewHolder holder) {
+        image.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                if (MotionEventCompat.getActionMasked(motionEvent) == MotionEvent.ACTION_DOWN) {
+                    listener.onStartDrag(holder);
+                }
+                return false;
+            }
+        });
+        image.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                // Todo set long click
+                return true;
+            }
+        });
     }
 }
