@@ -14,7 +14,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/dp_10"
         android:background="@color/color_grey_100"
+        bind:adapter="@{fragment.adapter}"
         bind:layoutManager="@{LayoutManager.grid(fragment.spanCount)}"/>
 </layout>

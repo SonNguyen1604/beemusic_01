@@ -13,4 +13,5 @@
     <color name="color_teal_900">#004D40</color>
     <color name="color_red_500">#F44336</color>
     <color name="color_teal_100">#B2DFDB</color>
+    <color name="color_transparent">#90000000</color>
 </resources>
