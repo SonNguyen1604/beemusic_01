@@ -6,20 +6,27 @@ import android.view.ViewGroup;
 
 import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.databinding.ItemAlbumAdapterBinding;
+import com.framgia.beemusic.util.draganddrop.DragAndDrop;
+import com.framgia.beemusic.util.draganddrop.ItemTouchHelperAdapter;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by beepi on 24/03/2017.
  */
-public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder> {
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHolder>
+    implements ItemTouchHelperAdapter {
     private List<Album> mAlbums;
     private LayoutInflater mLayoutInflater;
     private AlbumContract.Presenter mPresenter;
+    private DragAndDrop.OnDragListener mOnDragListener;
 
-    public AlbumAdapter(List<Album> albums, AlbumContract.Presenter presenter) {
+    public AlbumAdapter(List<Album> albums, AlbumContract.Presenter presenter, DragAndDrop
+        .OnDragListener listener) {
         mAlbums = albums;
         mPresenter = presenter;
+        mOnDragListener = listener;
     }
 
     @Override
@@ -40,8 +47,20 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         return mAlbums != null ? mAlbums.size() : 0;
     }
 
+    @Override
+    public boolean onItemMove(int fromPosition, int toPosition) {
+        Collections.swap(mAlbums, fromPosition, toPosition);
+        notifyItemMoved(fromPosition, toPosition);
+        return true;
+    }
+
+    @Override
+    public void onItemSwipe(int position) {
+    }
+
     public class AlbumViewHolder extends RecyclerView.ViewHolder {
         private ItemAlbumAdapterBinding mBinding;
+        private Album mAlbum;
 
         public AlbumViewHolder(ItemAlbumAdapterBinding binding) {
             super(binding.getRoot());
@@ -49,10 +68,15 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
         }
 
         private void bind(int pos) {
-            Album album = mAlbums.get(pos);
-            if (album == null) return;
-            mBinding.setAlbum(album);
+            mAlbum = mAlbums.get(pos);
+            if (mAlbum == null) return;
+            mBinding.setHolder(this);
+            mBinding.setListener(mOnDragListener);
             mBinding.executePendingBindings();
+        }
+
+        public Album getAlbum() {
+            return mAlbum;
         }
     }
 }

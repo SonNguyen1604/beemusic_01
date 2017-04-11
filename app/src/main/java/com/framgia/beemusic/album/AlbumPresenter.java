@@ -13,6 +13,7 @@ import com.framgia.beemusic.data.source.SongDataSource;
 
 import rx.Subscriber;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 import rx.subscriptions.CompositeSubscription;
 
@@ -63,7 +64,7 @@ public class AlbumPresenter implements AlbumContract.Presenter {
         Subscription subscription = mAlbumHandler.getDataObservableByModels(
             mAlbumHandler.getModel(null, null))
             .subscribeOn(Schedulers.io())
-            .observeOn(Schedulers.newThread())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe(new Subscriber<Album>() {
                 @Override
                 public void onCompleted() {
