@@ -1,6 +1,5 @@
 package com.framgia.beemusic.album;
 
-import android.databinding.ObservableArrayList;
 import android.support.annotation.NonNull;
 
 import com.framgia.beemusic.data.model.Album;
@@ -10,6 +9,10 @@ import com.framgia.beemusic.data.source.AlbumDataSource;
 import com.framgia.beemusic.data.source.DataSourceRelationship;
 import com.framgia.beemusic.data.source.SingerDataSource;
 import com.framgia.beemusic.data.source.SongDataSource;
+import com.framgia.beemusic.data.source.local.songalbum.SongAlbumSourceContract;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import rx.Subscriber;
 import rx.Subscription;
@@ -54,13 +57,33 @@ public class AlbumPresenter implements AlbumContract.Presenter {
     }
 
     @Override
+    public void onShowDialog(Album album, int pos) {
+        mView.showDialog(album, pos);
+    }
+
+    @Override
+    public void onDeleteAlbum(Album album, int pos) {
+        String selection = SongAlbumSourceContract.SongAlbumEntry.COLUMN_ID_ALBUM + " = ?";
+        mView.notifyItemRemove(pos);
+        mAlbumHandler.delete(album.getId());
+        mSongAlbumHandler.delete(selection, new String[]{String.valueOf(album.getId())});
+    }
+
+    @Override
+    public void onOpenSongDetail(AlbumAdapter.AlbumViewHolder holder) {
+        if (holder == null) return;
+        if (!holder.isTransparent.get()) return; // todo open detail play music
+        holder.isTransparent.set(false);
+    }
+
+    @Override
     public void onSearch(String keySearch) {
     }
 
     @Override
     public void subcribe() {
         mSubscription.clear();
-        final ObservableArrayList<Album> albums = new ObservableArrayList<>();
+        final List<Album> albums = new ArrayList<>();
         Subscription subscription = mAlbumHandler.getDataObservableByModels(
             mAlbumHandler.getModel(null, null))
             .subscribeOn(Schedulers.io())

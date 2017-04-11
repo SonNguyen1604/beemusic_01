@@ -1,5 +1,6 @@
 package com.framgia.beemusic.album;
 
+import android.databinding.ObservableBoolean;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -58,9 +59,22 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
     public void onItemSwipe(int position) {
     }
 
+    public List<Album> getAlbums() {
+        return mAlbums;
+    }
+
+    public void removeItem(int pos) {
+        mAlbums.remove(pos);
+        notifyItemRemoved(pos);
+    }
+
     public class AlbumViewHolder extends RecyclerView.ViewHolder {
+        public final ObservableBoolean isTransparent = new ObservableBoolean();
+        public final static float TRANSPARENT = 0.5f;
+        public final static float NOT_TRANSPARENT = 1.0f;
         private ItemAlbumAdapterBinding mBinding;
         private Album mAlbum;
+        private int mPos;
 
         public AlbumViewHolder(ItemAlbumAdapterBinding binding) {
             super(binding.getRoot());
@@ -69,14 +83,20 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.AlbumViewHol
 
         private void bind(int pos) {
             mAlbum = mAlbums.get(pos);
+            mPos = pos;
             if (mAlbum == null) return;
             mBinding.setHolder(this);
             mBinding.setListener(mOnDragListener);
+            mBinding.setPresenter(mPresenter);
             mBinding.executePendingBindings();
         }
 
         public Album getAlbum() {
             return mAlbum;
+        }
+
+        public int getPos() {
+            return mPos;
         }
     }
 }

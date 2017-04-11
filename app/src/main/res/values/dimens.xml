@@ -25,4 +25,9 @@
     <dimen name="dp_150">150dp</dimen>
     <integer name="span_count">2</integer>
     <dimen name="dp_12">12dp</dimen>
+    <item name="duration_800" format="integer" type="dimen">800</item>
+    <item name="fraction_50" format="fraction" type="dimen">50%</item>
+    <item name="scale_1.5" format="float" type="dimen">1.5</item>
+    <item name="scale_0.6" format="float" type="dimen">0.6</item>
+    <item name="scale_1.0" format="float" type="dimen">1.0</item>
 </resources>
