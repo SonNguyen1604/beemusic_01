@@ -9,6 +9,7 @@ import com.framgia.beemusic.data.source.AlbumDataSource;
 import com.framgia.beemusic.data.source.DataSourceRelationship;
 import com.framgia.beemusic.data.source.SingerDataSource;
 import com.framgia.beemusic.data.source.SongDataSource;
+import com.framgia.beemusic.data.source.local.album.AlbumSourceContract;
 import com.framgia.beemusic.data.source.local.songalbum.SongAlbumSourceContract;
 
 import java.util.ArrayList;
@@ -78,6 +79,31 @@ public class AlbumPresenter implements AlbumContract.Presenter {
 
     @Override
     public void onSearch(String keySearch) {
+        final List<Album> albums = new ArrayList<>();
+        String selection =
+            AlbumSourceContract.AlbumEntry.COLUMN_NAME + " like '%" + keySearch + "%'";
+        Subscription subscription = mAlbumHandler.getDataObservableByModels(
+            mAlbumHandler.getModel(selection, null))
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(new Subscriber<Album>() {
+                @Override
+                public void onCompleted() {
+                    mView.initRecycleview(albums);
+                }
+
+                @Override
+                public void onError(Throwable e) {
+                    e.printStackTrace();
+                    mView.initRecycleview(albums);
+                }
+
+                @Override
+                public void onNext(Album album) {
+                    albums.add(album);
+                }
+            });
+        mSubscription.add(subscription);
     }
 
     @Override
