@@ -10,11 +10,26 @@
             type="com.framgia.beemusic.album.AlbumFragment"/>
     </data>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/color_grey_100"
-        bind:adapter="@{fragment.adapter}"
-        bind:layoutManager="@{LayoutManager.grid(fragment.spanCount)}"/>
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/color_grey_100"
+            bind:adapter="@{fragment.adapter}"
+            bind:layoutManager="@{LayoutManager.grid(fragment.spanCount)}"/>
+
+        <android.support.design.widget.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:layout_margin="16dp"
+            android:elevation="@dimen/dp_5"
+            android:onClick="@{()->fragment.presenter.createAlbum()}"
+            android:src="@drawable/ic_plus_float_button"/>
+    </RelativeLayout>
 </layout>
