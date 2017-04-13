@@ -35,5 +35,7 @@
             android:launchMode="singleTop"
             android:screenOrientation="portrait"/>
         <activity android:name=".bottombar.BaseActivity"/>
+        <activity android:name=".album.createalbum.CreatedAlbumActivity"/>
     </application>
+
 </manifest>

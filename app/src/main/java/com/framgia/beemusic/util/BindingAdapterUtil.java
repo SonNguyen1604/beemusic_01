@@ -5,6 +5,7 @@ import android.content.Context;
 import android.databinding.BindingAdapter;
 import android.support.v4.view.MotionEventCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -22,6 +23,7 @@ import android.widget.SeekBar;
 import com.framgia.beemusic.BeeApplication;
 import com.framgia.beemusic.R;
 import com.framgia.beemusic.album.AlbumAdapter;
+import com.framgia.beemusic.album.createalbum.CreatedAlbumActivity;
 import com.framgia.beemusic.displaysong.DisplaySongActivity;
 import com.framgia.beemusic.main.MainActivity;
 import com.framgia.beemusic.util.draganddrop.DragAndDrop;
@@ -44,12 +46,22 @@ public class BindingAdapterUtil {
     }
 
     @BindingAdapter({"title", "color", "activity"})
-    public static void setSupportActionBar(Toolbar toolbar, String title, int color,
-                                           MainActivity activity) {
-        toolbar.inflateMenu(R.menu.toolbar_main);
+    public static void setToolBar(Toolbar toolbar, String title, int color,
+                                  AppCompatActivity activity) {
         toolbar.setTitle(title);
         toolbar.setTitleTextColor(color);
-        initSearchView(toolbar.getMenu(), activity);
+        if (activity instanceof MainActivity) {
+            toolbar.inflateMenu(R.menu.toolbar_main);
+            initSearchView(toolbar.getMenu(), (MainActivity) activity);
+            return;
+        }
+        if (activity instanceof CreatedAlbumActivity) {
+            toolbar.inflateMenu(R.menu.toolbar_created_album);
+            activity.setSupportActionBar(toolbar);
+            ActionBar actionBar = activity.getSupportActionBar();
+            if (actionBar == null) return;
+            actionBar.setDisplayHomeAsUpEnabled(true);
+        }
     }
 
     private static void initSearchView(Menu menu, final MainActivity activity) {

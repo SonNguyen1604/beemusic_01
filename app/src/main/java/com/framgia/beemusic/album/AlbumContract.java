@@ -16,6 +16,7 @@ public interface AlbumContract {
         void initRecycleview(List<Album> albums);
         void notifyItemRemove(int pos);
         void showDialog(Album album, int pos);
+        void openActivityCreatedAlbum();
     }
 
     interface Presenter extends BaseFragmentPresenter {

@@ -19,4 +19,5 @@
     <string name="search_hint">search...</string>
     <string name="action_remove">remove</string>
     <string name="title_delete_album">Delete this album</string>
+    <string name="title_done">done</string>
 </resources>

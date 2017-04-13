@@ -1,6 +1,7 @@
 package com.framgia.beemusic.album;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.databinding.ObservableField;
 import android.os.Bundle;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.framgia.beemusic.R;
+import com.framgia.beemusic.album.createalbum.CreatedAlbumActivity;
 import com.framgia.beemusic.data.model.Album;
 import com.framgia.beemusic.databinding.FragmentAlbumBinding;
 import com.framgia.beemusic.util.draganddrop.DragAndDrop;
@@ -95,6 +97,11 @@ public class AlbumFragment extends Fragment implements AlbumContract.View,
     }
 
     @Override
+    public void openActivityCreatedAlbum() {
+        startActivity(new Intent(getContext(), CreatedAlbumActivity.class));
+    }
+
+    @Override
     public void onSearch(String keySearch) {
         mPresenter.onSearch(keySearch);
     }
@@ -122,6 +129,10 @@ public class AlbumFragment extends Fragment implements AlbumContract.View,
     @Override
     public void onStartDrag(RecyclerView.ViewHolder viewHolder) {
         mItemTouchHelper.startDrag(viewHolder);
+    }
+
+    public AlbumContract.Presenter getPresenter() {
+        return mPresenter;
     }
 
     public ObservableField<AlbumAdapter> getAdapter() {

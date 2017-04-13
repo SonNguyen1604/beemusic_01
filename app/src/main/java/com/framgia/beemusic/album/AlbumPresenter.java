@@ -51,6 +51,7 @@ public class AlbumPresenter implements AlbumContract.Presenter {
 
     @Override
     public void createAlbum() {
+        mView.openActivityCreatedAlbum();
     }
 
     @Override

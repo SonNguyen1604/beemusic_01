@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:bind="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="activity"
+            type="com.framgia.beemusic.album.createalbum.CreatedAlbumActivity"/>
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/tool_bar"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/color_green_600"
+            android:minHeight="?attr/actionBarSize"
+            bind:activity="@{activity}"
+            bind:color="@{@color/color_white}"
+            bind:title="@{@string/app_name}"/>
+    </LinearLayout>
+</layout>
+
