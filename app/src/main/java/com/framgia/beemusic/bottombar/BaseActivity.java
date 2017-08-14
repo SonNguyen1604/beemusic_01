@@ -85,8 +85,7 @@ public class BaseActivity extends AppCompatActivity implements MusicReceiver.Lis
     }
 
     public void onOpenDetailMusic() {
-        startActivity(DisplaySongActivity.getIntent(sService.getSong(),
-            sService.getSinger()));
+        startActivity(DisplaySongActivity.getIntent(sService.getSong(), sService.getSinger()));
     }
 
     @Override
@@ -106,7 +105,7 @@ public class BaseActivity extends AppCompatActivity implements MusicReceiver.Lis
     }
 
     public class BindBottomModel {
-        public final int rotate = R.anim.rotation;
+        public final static int rotate = R.anim.rotation;
         public final ObservableBoolean isServiceRunning = new ObservableBoolean();
         public final ObservableBoolean isStatePause = new ObservableBoolean();
         public final ObservableField<String> singer = new ObservableField<>();

@@ -41,7 +41,7 @@ import static com.framgia.beemusic.util.Constant.GMAIL;
 import static com.framgia.beemusic.util.Constant.SUBJECT_EMAIL;
 
 public class MainActivity extends BaseActivity
-    implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
+        implements MainContract.View, NavigationView.OnNavigationItemSelectedListener {
     private MainContract.Presenter mPresenter;
     private static final int WRITE_EXTERNAL_STORAGE_CODE = 1;
     private ActivityMainBinding mBinding;
@@ -62,16 +62,15 @@ public class MainActivity extends BaseActivity
     }
 
     private void checkAndRequestPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            != PackageManager.PERMISSION_GRANTED) {
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
                 showConfirmPermissionDialog();
             } else {
                 ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    WRITE_EXTERNAL_STORAGE_CODE);
+                        new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
+                        WRITE_EXTERNAL_STORAGE_CODE);
             }
             return;
         }
@@ -84,34 +83,30 @@ public class MainActivity extends BaseActivity
     }
 
     private void showConfirmPermissionDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this)
-            .setCancelable(true)
-            .setTitle(R.string.title_permission)
-            .setMessage(R.string.msg_external_storage_permision);
-        builder.setNegativeButton(android.R.string.yes,
-            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    showNotLoadOnMediastore();
-                }
-            });
-        builder.setPositiveButton(android.R.string.no,
-            new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialogInterface, int i) {
-                    ActivityCompat.requestPermissions(MainActivity.this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+        AlertDialog.Builder builder = new AlertDialog.Builder(this).setCancelable(true)
+                .setTitle(R.string.title_permission)
+                .setMessage(R.string.msg_external_storage_permision);
+        builder.setNegativeButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                showNotLoadOnMediastore();
+            }
+        });
+        builder.setPositiveButton(android.R.string.no, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                ActivityCompat.requestPermissions(MainActivity.this,
+                        new String[] { Manifest.permission.WRITE_EXTERNAL_STORAGE },
                         WRITE_EXTERNAL_STORAGE_CODE);
-                }
-            });
+            }
+        });
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
-                                           @NonNull int[] grantResults) {
+            @NonNull int[] grantResults) {
         if (requestCode == WRITE_EXTERNAL_STORAGE_CODE) {
-            if (grantResults.length > 0 &&
-                grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 if (!ActivityUtils.isInstalled(this)) {
                     mPresenter.subcribe();
                 }
@@ -120,17 +115,13 @@ public class MainActivity extends BaseActivity
     }
 
     private void initPresenter() {
-        mPresenter = new MainPresenter(this,
-            new CompositeSubscription(),
-            SongRepository.getInstant(this),
-            AlbumRepository.getInstant(this),
-            SingerRepository.getInstant(this),
-            SynchronizeRepository.getInstant());
+        mPresenter = new MainPresenter(this, new CompositeSubscription(),
+                SongRepository.getInstant(this), AlbumRepository.getInstant(this),
+                SingerRepository.getInstant(this), SynchronizeRepository.getInstant());
     }
 
     private void showNotLoadOnMediastore() {
-        Toast.makeText(this, R.string.msg_not_load_mediastore, Toast.LENGTH_SHORT)
-            .show();
+        Toast.makeText(this, R.string.msg_not_load_mediastore, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -171,13 +162,17 @@ public class MainActivity extends BaseActivity
     }
 
     private void sendFeadback() {
-        Intent intent = new Intent(Intent.ACTION_SENDTO);
-        intent.setType("text/plain");
-        intent.putExtra(Intent.EXTRA_SUBJECT, SUBJECT_EMAIL);
-        intent.putExtra(Intent.EXTRA_TEXT, CONTENT_EMAIL);
-        intent.setData(Uri.parse(GMAIL));
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(intent);
+        try {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_SUBJECT, SUBJECT_EMAIL);
+            intent.putExtra(Intent.EXTRA_TEXT, CONTENT_EMAIL);
+            intent.setData(Uri.parse(GMAIL));
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -185,11 +180,11 @@ public class MainActivity extends BaseActivity
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.linear_content);
         if (fragment instanceof SongFragment) return;
         mSongFragment = SongFragment.newInstance();
-        ActivityUtils.replaceFragmentToActivity(getSupportFragmentManager(),
-            mSongFragment, R.id.linear_content);
+        ActivityUtils.replaceFragmentToActivity(getSupportFragmentManager(), mSongFragment,
+                R.id.linear_content);
         new SongPresenter(mSongFragment, SongRepository.getInstant(this),
-            AlbumRepository.getInstant(this), SingerRepository.getInstant(this),
-            SongAlbumRepository.getInstant(this), SongSingerRepository.getInstant(this));
+                AlbumRepository.getInstant(this), SingerRepository.getInstant(this),
+                SongAlbumRepository.getInstant(this), SongSingerRepository.getInstant(this));
     }
 
     @Override
@@ -197,11 +192,11 @@ public class MainActivity extends BaseActivity
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.linear_content);
         if (fragment instanceof AlbumFragment) return;
         mAlbumFragment = AlbumFragment.newInstance();
-        ActivityUtils.replaceFragmentToActivity(getSupportFragmentManager(),
-            mAlbumFragment, R.id.linear_content);
+        ActivityUtils.replaceFragmentToActivity(getSupportFragmentManager(), mAlbumFragment,
+                R.id.linear_content);
         new AlbumPresenter(mAlbumFragment, SongRepository.getInstant(this),
-            AlbumRepository.getInstant(this), SingerRepository.getInstant(this),
-            SongAlbumRepository.getInstant(this), SongSingerRepository.getInstant(this));
+                AlbumRepository.getInstant(this), SingerRepository.getInstant(this),
+                SongAlbumRepository.getInstant(this), SongSingerRepository.getInstant(this));
     }
 
     @Override
